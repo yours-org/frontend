@@ -23,7 +23,7 @@ export default function Header() {
 	return (
 		<div className="flex gap-2 p-4 bg-black justify-between">
 			<div className="flex items-center">
-				<img src="/logo.svg" className="h-16" />
+				<img src="/logo.svg" className="h-12" />
 				<a
 					className="text-sm text-white ml-5"
 					href="https://github.com/yours-org/frontend"
@@ -35,8 +35,8 @@ export default function Header() {
 			{!isLoading && !isUnlockLoading && (
 				<div className="flex flex-col">
 					<p className="text-xs text-slate-400">TVL</p>
-					<p className="text-md text-white">{formatNumber(tvl.toFixed(2))} BSV</p>
-					<p className="text-md text-white">${formatNumber((tvl * exchangeRate).toFixed(2))}</p>
+					<p className="text-sm text-white whitespace-nowrap">{formatNumber(tvl.toFixed(2))} BSV</p>
+					<p className="text-sm text-white whitespace-nowrap">${formatNumber((tvl * exchangeRate).toFixed(2))}</p>
 				</div>
 			)}
 		</div>
