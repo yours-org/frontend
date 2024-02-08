@@ -42,12 +42,32 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			.map((key) => {
 				const values = groups[key].map((e) => parseInt(e.sum))
 				const maxHeight = Math.max(...groups[key].map((e) => e.height))
-				const lastUnlock = unlockData.filter(e => e.height <= maxHeight).slice(-1)[0]
+				const lastUnlock = unlockData
+					.filter((e) => e.height <= maxHeight)
+					.reduce((a, e) => a + parseInt(e.sats), 0)
 
 				return {
 					time: groups[key][0].time,
-					value: (Math.max(...values) - parseInt(lastUnlock.sum)) / 1e8,
-					volume: groups[key].map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0) / 1e8
+					value: (Math.max(...values) - parseInt(lastUnlock)) / 1e8
+				}
+			})
+			.sort((a, b) => a?.time - b?.time)
+
+		const volumeData = Object.keys(groups)
+			.map((key) => {
+				const values = groups[key].map((e) => parseInt(e.sum))
+				const heights = groups[key].map((e) => e.height)
+				const maxHeight = Math.max(...heights)
+				const minHeight = Math.min(...heights)
+				const unlocks = unlockData.filter((e) => e.height >= minHeight && e.height <= maxHeight)
+
+				const lockVolume = groups[key].map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
+				const unlockVolume = unlocks.map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
+
+				return {
+					time: groups[key][0].time,
+					value: (lockVolume + unlockVolume) / 1e8,
+					color: lockVolume > unlockVolume ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
 				}
 			})
 			.sort((a, b) => a?.time - b?.time)
@@ -91,7 +111,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			priceScaleId: ''
 		})
 
-		volumeSeries.setData(parsedData.map((e) => ({ time: e.time, value: e.volume })))
+		volumeSeries.setData(volumeData)
 
 		const newSeries = chart.addAreaSeries({
 			lineColor: colors.lineColor,
