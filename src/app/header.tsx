@@ -14,7 +14,9 @@ export default function Header() {
 			return null
 		}
 		const lastLock = data.slice(-1)[0]
-		const lastUnlock = unlockData.find((e) => e.height === lastLock.height)
+		const lastUnlock = unlockData
+			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
+			.slice(-1)[0]
 		return (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
 	}, [data, unlockData])
 
