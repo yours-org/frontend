@@ -10,6 +10,8 @@ function groupData(data, interval) {
 		'5m': 5 * 60 * 1000,
 		'1h': 60 * 60 * 1000,
 		'4h': 60 * 60 * 1000 * 4,
+		'6h': 60 * 60 * 1000 * 6,
+		'12h': 60 * 60 * 1000 * 12,
 		'1D': 24 * 60 * 60 * 1000
 	}
 
@@ -36,7 +38,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 	const chartContainerRef = useRef()
 
 	useEffect(() => {
-		const groups = groupData(data, '1D')
+		const groups = groupData(data, '12h')
 
 		const parsedData = Object.keys(groups)
 			.map((key) => {
@@ -66,7 +68,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 
 				return {
 					time: groups[key][0].time,
-					value: (lockVolume + unlockVolume) / 1e8,
+					value: lockVolume / 1e8,
 					color: lockVolume > unlockVolume ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
 				}
 			})

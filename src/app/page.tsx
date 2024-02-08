@@ -10,7 +10,10 @@ const fetcher = (...args) => fetch(...args).then((res) => res.json())
 export default function Home() {
 	const { height, width } = useWindowSize()
 	const { data, isLoading } = useSwr('https://lock.yours.org/lock-history', fetcher)
-	const { data: unlockData, isLoading: isUnlockLoading } = useSwr('https://lock.yours.org/unlock-history', fetcher)
+	const { data: unlockData, isLoading: isUnlockLoading } = useSwr(
+		'https://lock.yours.org/unlock-history',
+		fetcher
+	)
 
 	if (!height || isLoading || isUnlockLoading) {
 		return (
