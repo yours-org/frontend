@@ -26,8 +26,8 @@ export default function Header() {
 			{!isLoading && !isUnlockLoading && (
 				<div className="flex flex-col">
 					<p className="text-xs text-slate-400">TVL</p>
-					<p className="text-md">{formatNumber(tvl.toFixed(2))} BSV</p>
-					<p className="text-md">${formatNumber((tvl * exchangeRate).toFixed(2))}</p>
+					<p className="text-md text-white">{formatNumber(tvl.toFixed(2))} BSV</p>
+					<p className="text-md text-white">${formatNumber((tvl * exchangeRate).toFixed(2))}</p>
 				</div>
 			)}
 		</div>
