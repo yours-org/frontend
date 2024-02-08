@@ -22,7 +22,16 @@ export default function Header() {
 
 	return (
 		<div className="flex gap-2 p-4 bg-black justify-between">
-			<img src="/logo.svg" className="h-16" />
+			<div className="flex items-center">
+				<img src="/logo.svg" className="h-16" />
+				<a
+					className="text-sm text-white ml-5"
+					href="https://github.com/yours-org/frontend"
+					target="_blank"
+				>
+					github
+				</a>
+			</div>
 			{!isLoading && !isUnlockLoading && (
 				<div className="flex flex-col">
 					<p className="text-xs text-slate-400">TVL</p>

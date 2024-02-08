@@ -8,7 +8,17 @@ const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
 	title: 'Yours',
-	description: 'Your Bitcoin.'
+	description: 'Yours',
+	openGraph: {
+		title: 'Yours',
+		description: 'Yours',
+		url: 'https://yours.org',
+		images: [
+			{
+				url: 'https://yours.org/unfurl.png'
+			}
+		]
+	}
 }
 
 export default function RootLayout({

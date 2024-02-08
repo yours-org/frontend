@@ -96,7 +96,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 					visible: false
 				},
 				horzLines: {
-					color: 'rgba(255, 255, 255, .2)'
+					visible: false,
 				}
 			},
 			// @ts-ignore
