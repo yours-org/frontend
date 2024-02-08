@@ -1,19 +1,14 @@
 'use client'
 
+import React from 'react'
 import useWindowSize from '@/utils/hooks/useWindowSize'
 import Loading from '@/components/loading'
 import Chart from './chart'
-import useSwr from 'swr'
-// @ts-ignore
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
+import useLockHistory from '@/utils/hooks/useLockHistory'
 
 export default function Home() {
 	const { height, width } = useWindowSize()
-	const { data, isLoading } = useSwr('https://lock.yours.org/lock-history', fetcher)
-	const { data: unlockData, isLoading: isUnlockLoading } = useSwr(
-		'https://lock.yours.org/unlock-history',
-		fetcher
-	)
+	const { data, unlockData, isLoading, isUnlockLoading } = useLockHistory()
 
 	if (!height || isLoading || isUnlockLoading) {
 		return (
@@ -24,7 +19,7 @@ export default function Home() {
 	}
 
 	return (
-		<main className="flex w-full">
+		<main className="flex w-full relative">
 			<Chart height={height - 96} data={data} unlockData={unlockData} />
 		</main>
 	)

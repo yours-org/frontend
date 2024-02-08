@@ -38,7 +38,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 	const chartContainerRef = useRef()
 
 	useEffect(() => {
-		const groups = groupData(data, '12h')
+		const groups = groupData(data, '1D')
 
 		const parsedData = Object.keys(groups)
 			.map((key) => {
