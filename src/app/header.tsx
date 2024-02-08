@@ -17,6 +17,9 @@ export default function Header() {
 		const lastUnlock = unlockData
 			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
 			.slice(-1)[0]
+
+		console.log({ lastLock, lastUnlock })
+
 		return (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
 	}, [data, unlockData])
 
