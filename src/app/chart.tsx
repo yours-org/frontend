@@ -3,11 +3,16 @@
 import { createChart, ColorType } from 'lightweight-charts'
 // @ts-ignore
 import React, { useEffect, useRef } from 'react'
+import formatNumber from '@/utils/format-number'
+import useExchangeRate from '@/utils/hooks/useExchangeRate'
+import classNames from 'classnames'
+
+const TABS = ['1h', '4h', '6h', '12h', '1D']
 
 function groupData(data, interval) {
 	const groupedData = {}
 	const intervalMilliseconds = {
-		'5m': 5 * 60 * 1000,
+		'10m': 10 * 60 * 1000,
 		'1h': 60 * 60 * 1000,
 		'4h': 60 * 60 * 1000 * 4,
 		'6h': 60 * 60 * 1000 * 6,
@@ -35,10 +40,27 @@ function groupData(data, interval) {
 
 export default function Chart(props: { height: number; data: any; unlockData: any }) {
 	const { data, unlockData, height } = props
-	const chartContainerRef = useRef()
+	const { exchangeRate } = useExchangeRate()
+	const [selectedTab, setSelectedTab] = React.useState('1D')
+
+	const tvl = React.useMemo(() => {
+		if (!data?.length || !unlockData?.length) {
+			return null
+		}
+		const lastLock = data.slice(-1)[0]
+		const lastUnlock = unlockData
+			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
+			.slice(-1)[0]
+
+		console.log({ lastLock, lastUnlock })
+
+		return (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+	}, [data, unlockData])
+
+	const ref = useRef()
 
 	useEffect(() => {
-		const groups = groupData(data, '1D')
+		const groups = groupData(data, selectedTab)
 
 		const parsedData = Object.keys(groups)
 			.map((key) => {
@@ -83,10 +105,10 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 		}
 		const handleResize = () => {
 			// @ts-ignore
-			chart.applyOptions({ width: chartContainerRef.current.clientWidth })
+			chart.applyOptions({ width: ref.current.clientWidth })
 		}
 
-		const chart = createChart(chartContainerRef.current, {
+		const chart = createChart(ref.current, {
 			layout: {
 				background: { type: ColorType.Solid, color: colors.backgroundColor },
 				textColor: colors.textColor
@@ -96,40 +118,94 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 					visible: false
 				},
 				horzLines: {
-					visible: false,
+					visible: false
 				}
 			},
+			rightPriceScale: {
+				borderVisible: false,
+				textColor: 'black'
+			},
+			timeScale: {
+				borderVisible: false,
+				timeVisible: true
+			},
+			//localization: {
+			//priceFormatter: (p) => {
+			//return `${p} BSV`
+			//}
+			//},
+
 			// @ts-ignore
-			width: chartContainerRef.current.clientWidth,
+			width: ref.current.clientWidth,
 			height: height
 		})
 		chart.timeScale().fitContent()
 
-		var volumeSeries = chart.addHistogramSeries({
+		// Locks
+		const newSeries = chart.addAreaSeries({
+			lineColor: '#34D399',
+			topColor: 'rgba(52, 211, 153, 0.9)',
+			bottomColor: 'rgba(161, 255, 139, 0.04)'
+		})
+		newSeries.setData(parsedData)
+
+		// Lock Volume
+		const volumeSeries = chart.addHistogramSeries({
 			color: '#26a69a',
 			priceFormat: {
 				type: 'volume'
 			},
 			priceScaleId: ''
 		})
-
 		volumeSeries.setData(volumeData)
-
-		const newSeries = chart.addAreaSeries({
-			lineColor: colors.lineColor,
-			topColor: colors.areaTopColor,
-			bottomColor: colors.areaBottomColor
-		})
-		newSeries.setData(parsedData)
 
 		window.addEventListener('resize', handleResize)
 
 		return () => {
 			window.removeEventListener('resize', handleResize)
-
 			chart.remove()
 		}
-	}, [data, height, unlockData])
+	}, [data, height, unlockData, selectedTab])
 
-	return <div className="h-full w-full" ref={chartContainerRef} />
+	const renderTab = React.useCallback(
+		(e) => {
+			return (
+				<div
+					className={classNames(
+						'flex justify-center bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold',
+						{
+							['text-white']: selectedTab === e,
+							['text-[#D0D5DD]']: selectedTab !== e
+						}
+					)}
+					key={e}
+					onClick={() => setSelectedTab(e)}
+				>
+					{e}
+				</div>
+			)
+		},
+		[selectedTab]
+	)
+
+	return (
+		<div className="h-full w-full relative">
+			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
+				<p className="text-sm font-semibold text-white">Locked Coins</p>
+				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8">
+					<div className="flex gap-2 items-center">
+						<img src="/bsv.svg" className="h-4 w-4" />
+						<p className="text-2xl text-white whitespace-nowrap">{formatNumber(tvl.toFixed(2))}</p>
+					</div>
+					<div>
+						<p className="text-2xl text-white whitespace-nowrap">
+							${formatNumber((tvl * exchangeRate).toFixed(2))}
+						</p>
+					</div>
+				</div>
+				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
+			</div>
+			<div className="h-full w-full" ref={ref} />
+		</div>
+	)
 }

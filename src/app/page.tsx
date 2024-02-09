@@ -18,9 +18,11 @@ export default function Home() {
 		)
 	}
 
+	const chartHeight = width < 768 ? height - 204 : height - 72;
+
 	return (
 		<main className="flex w-full relative">
-			<Chart height={height - 96} data={data} unlockData={unlockData} />
+			<Chart height={chartHeight} data={data} unlockData={unlockData} />
 		</main>
 	)
 }
