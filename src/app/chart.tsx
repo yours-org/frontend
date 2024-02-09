@@ -90,7 +90,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 
 				return {
 					time: groups[key][0].time,
-					value: lockVolume / 1e8,
+					value: (lockVolume + unlockVolume) / 1e8,
 					color: lockVolume > unlockVolume ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
 				}
 			})
