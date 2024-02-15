@@ -43,7 +43,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
-	const tvl = React.useMemo(() => {
+	const { tvl, percentChange } = React.useMemo(() => {
 		if (!data?.length || !unlockData?.length) {
 			return null
 		}
@@ -52,9 +52,27 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
 			.slice(-1)[0]
 
-		console.log({ lastLock, lastUnlock })
+		const lastLockHeight = parseInt(lastLock.height, 10)
 
-		return (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+		const dayAgoLock = data.filter((e) => parseInt(e.height) < lastLockHeight - 144).slice(-1)[0]
+		const dayAgoUnlock = unlockData
+			.filter((e) => parseInt(e.height) <= parseInt(dayAgoLock.height))
+			.slice(-1)[0]
+
+		console.log({
+			lastLock,
+			lastUnlock,
+			dayAgoLock,
+			dayAgoUnlock,
+			diff: lastLockHeight - parseInt(dayAgoLock.height, 10)
+		})
+
+		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
+
+		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
+
+		return { tvl, percentChange }
 	}, [data, unlockData])
 
 	const ref = useRef()
@@ -193,13 +211,23 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
 				<p className="text-sm font-semibold text-white">Locked Coins</p>
 				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8">
-					<div className="flex gap-2 items-center">
-						<img src="/bsv.svg" className="h-4 w-4" />
-						<p className="text-2xl text-white whitespace-nowrap">{formatNumber(tvl.toFixed(2))}</p>
+					<div className="flex flex-col">
+						<div className="flex gap-2 items-center">
+							<img src="/bsv.svg" className="h-4 w-4" />
+							<p className="text-2xl text-white whitespace-nowrap">
+								{formatNumber(tvl.toFixed(2))}
+							</p>
+						</div>
+						<p className="text-sm text-[#6CE9A6] whitespace-nowrap">
+							{formatNumber(((tvl * percentChange) / 100).toFixed(2))} ({percentChange.toFixed(2)}%)
+						</p>
 					</div>
-					<div>
+					<div className="flex flex-col">
 						<p className="text-2xl text-white whitespace-nowrap">
 							${formatNumber((tvl * exchangeRate).toFixed(2))}
+						</p>
+						<p className="text-right text-sm text-[#6CE9A6] whitespace-nowrap">
+							${formatNumber((tvl * percentChange / 100 * exchangeRate).toFixed(2))}
 						</p>
 					</div>
 				</div>
