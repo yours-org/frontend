@@ -43,7 +43,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
-	const { tvl, percentChange } = React.useMemo(() => {
+	const { dayAgoTvl, tvl, percentChange } = React.useMemo(() => {
 		if (!data?.length || !unlockData?.length) {
 			return null
 		}
@@ -59,20 +59,20 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			.filter((e) => parseInt(e.height) <= parseInt(dayAgoLock.height))
 			.slice(-1)[0]
 
+		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
+
 		console.log({
 			lastLock,
 			lastUnlock,
 			dayAgoLock,
 			dayAgoUnlock,
-			diff: lastLockHeight - parseInt(dayAgoLock.height, 10)
+			diff: tvl - dayAgoTvl
 		})
-
-		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
-		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
 
 		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
 
-		return { tvl, percentChange }
+		return { tvl, percentChange, dayAgoTvl }
 	}, [data, unlockData])
 
 	const ref = useRef()
@@ -218,16 +218,27 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 								{formatNumber(tvl.toFixed(2))}
 							</p>
 						</div>
-						<p className="text-sm text-[#6CE9A6] whitespace-nowrap">
-							{formatNumber(((tvl * percentChange) / 100).toFixed(2))} ({percentChange.toFixed(2)}%)
+						<p
+							className={classNames('text-sm whitespace-nowrap', {
+								['text-[#6CE9A6]']: percentChange > 0,
+								['text-red-500']: percentChange < 0
+							})}
+						>
+							{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
+							{percentChange.toFixed(2)}%)
 						</p>
 					</div>
 					<div className="flex flex-col">
 						<p className="text-2xl text-white whitespace-nowrap">
 							${formatNumber((tvl * exchangeRate).toFixed(2))}
 						</p>
-						<p className="text-right text-sm text-[#6CE9A6] whitespace-nowrap">
-							${formatNumber((tvl * percentChange / 100 * exchangeRate).toFixed(2))}
+						<p
+							className={classNames('text-right text-sm whitespace-nowrap', {
+								['text-[#6CE9A6]']: percentChange > 0,
+								['text-red-500']: percentChange < 0
+							})}
+						>
+							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
 						</p>
 					</div>
 				</div>
