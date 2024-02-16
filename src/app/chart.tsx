@@ -73,7 +73,8 @@ export default function ChartComponent(props) {
                     'flex justify-center bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold shadow-md',
                     {
                         ['text-white']: selectedTab === e,
-                        ['text-[#D0D5DD]']: selectedTab !== e
+                        ['text-[#D0D5DD]']: selectedTab !== e,
+                        ['bg-blue-500']: selectedTab === e // Adding blue background when selected
                     }
                 )}
                 key={e}
@@ -116,7 +117,7 @@ export default function ChartComponent(props) {
                         onClick={() => handleChartTypeChange('line')}
                         className={classNames(
                             'text-white bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold shadow-md',
-                            { 'text-[#2962FF]': chartType === 'line' }
+                            { 'text-[#2962FF] bg-blue-500': chartType === 'line' }
                         )}
                     >
                         Line Chart
@@ -125,7 +126,7 @@ export default function ChartComponent(props) {
                         onClick={() => handleChartTypeChange('area')}
                         className={classNames(
                             'text-white bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold shadow-md',
-                            { 'text-[#2962FF]': chartType === 'area' }
+                            { 'text-[#2962FF] bg-blue-500': chartType === 'area' }
                         )}
                     >
                         Area Chart
@@ -134,7 +135,7 @@ export default function ChartComponent(props) {
                         onClick={togglePieChart}
                         className={classNames(
                             'text-white bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold shadow-md',
-                            { 'text-[#2962FF]': showPieChart }
+                            { 'text-[#2962FF] bg-blue-500': showPieChart }
                         )}
                     >
                         Pie Chart
