@@ -38,8 +38,13 @@ function groupData(data, interval) {
 	return groupedData
 }
 
-export default function Chart(props: { height: number; data: any; unlockData: any }) {
-	const { data, unlockData, height } = props
+export default function Chart(props: {
+	height: number
+	data: any
+	unlockData: any
+	mempoolData: any
+}) {
+	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
@@ -59,7 +64,8 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			.filter((e) => parseInt(e.height) <= parseInt(dayAgoLock.height))
 			.slice(-1)[0]
 
-		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+		const mempoolSats = mempoolData?.sats || 0
+		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum) + mempoolSats) / 1e8
 		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
 
 		console.log({
@@ -67,13 +73,14 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			lastUnlock,
 			dayAgoLock,
 			dayAgoUnlock,
-			diff: tvl - dayAgoTvl
+			diff: tvl - dayAgoTvl,
+			mempool: mempoolSats
 		})
 
 		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
 
 		return { tvl, percentChange, dayAgoTvl }
-	}, [data, unlockData])
+	}, [data, unlockData, mempoolData])
 
 	const ref = useRef()
 
@@ -210,7 +217,7 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 		<div className="h-full w-full relative">
 			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
 				<p className="text-sm font-semibold text-white">Locked Coins</p>
-				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8">
+				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 w-[350px] max-w-full">
 					<div className="flex flex-col">
 						<div className="flex gap-2 items-center">
 							<img src="/bsv.svg" className="h-4 w-4" />
