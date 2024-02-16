@@ -65,7 +65,7 @@ export default function Chart(props: {
 			.slice(-1)[0]
 
 		const mempoolSats = mempoolData?.sats || 0
-		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum) + mempoolSats) / 1e8
+		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
 		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
 
 		console.log({

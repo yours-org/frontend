@@ -16,5 +16,25 @@ export default function useLockHistory() {
 		refreshInterval: 2000
 	})
 
-	return { data, unlockData, isLoading, isUnlockLoading, mempoolData }
+	const mempoolSats = mempoolData?.sats || 0
+
+	return {
+		data: data
+			? data.map((e, i) => {
+					if (i === data.length - 1) {
+						return {
+							...e,
+							sum: `${parseInt(e.sum) + mempoolSats}`,
+							sats: `${parseInt(e.sats) + mempoolSats}`
+						}
+					}
+
+					return e
+			  })
+			: null,
+		unlockData,
+		isLoading,
+		isUnlockLoading,
+		mempoolData
+	}
 }
