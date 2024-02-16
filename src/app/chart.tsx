@@ -179,7 +179,7 @@ const chartOptions = {
                 }
             },
             title: {
-                text: 'Locked Coins'
+                text: 'Locked Sats'
             }
         },
         grid: {
@@ -230,7 +230,7 @@ const chartOptions = {
                 }
             },
             title: {
-                text: 'Locked Coins'
+                text: 'Locked Sats'
             }
         },
         grid: {
