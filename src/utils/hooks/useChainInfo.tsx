@@ -9,7 +9,7 @@ export default function useChainInfo() {
 		'https://api.whatsonchain.com/v1/bsv/main/chain/info',
 		fetcher,
 		{
-			refreshInterval: 1000
+			refreshInterval: 5000
 		}
 	)
 
