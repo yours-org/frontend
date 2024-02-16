@@ -173,15 +173,15 @@ export default function Chart(props: {
 			bottomColor: 'rgba(161, 255, 139, 0.04)'
 		})
 		newSeries.setData(parsedData)
-		newSeries.setMarkers([
-			{
-				time: '2024-02-07',
-				position: 'inBar',
-				color: 'white',
-				shape: 'circle',
-				text: 'yours.org launch'
-			}
-		])
+		//newSeries.setMarkers([
+			//{
+				//time: '2024-02-07',
+				//position: 'inBar',
+				//color: 'white',
+				//shape: 'circle',
+				//text: 'yours.org launch'
+			//}
+		//])
 
 		// Lock Volume
 		const volumeSeries = chart.addHistogramSeries({
