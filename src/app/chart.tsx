@@ -36,8 +36,8 @@ function groupData(data, interval) {
 export default function ChartComponent(props) {
     const { data, unlockData, height } = props;
     const { exchangeRate } = useExchangeRate();
-    const [selectedTab, setSelectedTab] = useState('1D'); // Set default time interval to '1D'
-    const [chartType, setChartType] = useState('area'); // Set default chart type to 'area'
+    const [selectedTab, setSelectedTab] = useState('1D');
+    const [chartType, setChartType] = useState('area');
     const chartRef = useRef(null);
     const [showPieChart, setShowPieChart] = useState(false);
 
@@ -243,7 +243,7 @@ const chartOptions = {
         stroke: {
             width: 1,
         },
-        colors: ['#00E676'], // Set the color to green
+        colors: ['#00E676'], 
         tooltip: {
             enabled: true,
             x: {
