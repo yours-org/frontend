@@ -8,7 +8,7 @@ import useLockHistory from '@/utils/hooks/useLockHistory'
 
 export default function Home() {
 	const { height, width } = useWindowSize()
-	const { data, unlockData, isLoading, isUnlockLoading } = useLockHistory()
+	const { data, unlockData, mempoolData, isLoading, isUnlockLoading } = useLockHistory()
 
 	if (!height || isLoading || isUnlockLoading) {
 		return (
@@ -18,11 +18,11 @@ export default function Home() {
 		)
 	}
 
-	const chartHeight = width < 768 ? height - 204 : height - 72;
+	const chartHeight = width < 768 ? height - 204 : height - 72
 
 	return (
 		<main className="flex w-full relative">
-			<Chart height={chartHeight} data={data} unlockData={unlockData} />
+			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
 		</main>
 	)
 }
