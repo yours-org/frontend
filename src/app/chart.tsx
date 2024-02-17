@@ -38,12 +38,17 @@ function groupData(data, interval) {
 	return groupedData
 }
 
-export default function Chart(props: { height: number; data: any; unlockData: any }) {
-	const { data, unlockData, height } = props
+export default function Chart(props: {
+	height: number
+	data: any
+	unlockData: any
+	mempoolData: any
+}) {
+	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
-	const tvl = React.useMemo(() => {
+	const { dayAgoTvl, tvl, percentChange } = React.useMemo(() => {
 		if (!data?.length || !unlockData?.length) {
 			return null
 		}
@@ -52,10 +57,30 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
 			.slice(-1)[0]
 
-		console.log({ lastLock, lastUnlock })
+		const lastLockHeight = parseInt(lastLock.height, 10)
 
-		return (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
-	}, [data, unlockData])
+		const dayAgoLock = data.filter((e) => parseInt(e.height) < lastLockHeight - 144).slice(-1)[0]
+		const dayAgoUnlock = unlockData
+			.filter((e) => parseInt(e.height) <= parseInt(dayAgoLock.height))
+			.slice(-1)[0]
+
+		const mempoolSats = mempoolData?.sats || 0
+		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
+		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
+
+		console.log({
+			lastLock,
+			lastUnlock,
+			dayAgoLock,
+			dayAgoUnlock,
+			diff: tvl - dayAgoTvl,
+			mempool: mempoolSats
+		})
+
+		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
+
+		return { tvl, percentChange, dayAgoTvl }
+	}, [data, unlockData, mempoolData])
 
 	const ref = useRef()
 
@@ -148,6 +173,15 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 			bottomColor: 'rgba(161, 255, 139, 0.04)'
 		})
 		newSeries.setData(parsedData)
+		//newSeries.setMarkers([
+			//{
+				//time: '2024-02-07',
+				//position: 'inBar',
+				//color: 'white',
+				//shape: 'circle',
+				//text: 'yours.org launch'
+			//}
+		//])
 
 		// Lock Volume
 		const volumeSeries = chart.addHistogramSeries({
@@ -192,14 +226,35 @@ export default function Chart(props: { height: number; data: any; unlockData: an
 		<div className="h-full w-full relative">
 			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
 				<p className="text-sm font-semibold text-white">Locked Coins</p>
-				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8">
-					<div className="flex gap-2 items-center">
-						<img src="/bsv.svg" className="h-4 w-4" />
-						<p className="text-2xl text-white whitespace-nowrap">{formatNumber(tvl.toFixed(2))}</p>
+				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
+					<div className="flex flex-col">
+						<div className="flex gap-2 items-center">
+							<img src="/bsv.svg" className="h-4 w-4" />
+							<p className="text-2xl text-white whitespace-nowrap">
+								{formatNumber(tvl.toFixed(2))}
+							</p>
+						</div>
+						<p
+							className={classNames('text-sm whitespace-nowrap', {
+								['text-[#6CE9A6]']: percentChange > 0,
+								['text-red-500']: percentChange < 0
+							})}
+						>
+							{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
+							{percentChange.toFixed(2)}%)
+						</p>
 					</div>
-					<div>
+					<div className="flex flex-col">
 						<p className="text-2xl text-white whitespace-nowrap">
 							${formatNumber((tvl * exchangeRate).toFixed(2))}
+						</p>
+						<p
+							className={classNames('text-right text-sm whitespace-nowrap', {
+								['text-[#6CE9A6]']: percentChange > 0,
+								['text-red-500']: percentChange < 0
+							})}
+						>
+							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
 						</p>
 					</div>
 				</div>
