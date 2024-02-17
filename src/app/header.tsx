@@ -1,8 +1,11 @@
 'use client'
 
 import React from 'react'
+import useChainInfo from '@/utils/hooks/useChainInfo'
 
 export default function Header() {
+	useChainInfo();
+
 	return (
 		<div className="flex gap-2 p-4 bg-black justify-between items-center">
 			<div className="flex items-center">
