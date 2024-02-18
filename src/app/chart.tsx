@@ -44,10 +44,11 @@ export default function Chart(props: {
 	unlockData: any
 	mempoolData: any
 }) {
+	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
-	const { tvl, percentChange, dayAgoTvl } = React.useMemo(() => {
+	const { dayAgoTvl, tvl, percentChange } = React.useMemo(() => {
 		if (!data?.length || !unlockData?.length) {
 			return null
 		}
