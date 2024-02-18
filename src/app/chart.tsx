@@ -82,6 +82,8 @@ export default function Chart(props: {
 		return { tvl, percentChange, dayAgoTvl }
 	}, [data, unlockData, mempoolData])
 
+	const totalCirculatingSupply = 19600000 // 19.6M
+
 	const ref = useRef()
 
 	useEffect(() => {
@@ -257,6 +259,16 @@ export default function Chart(props: {
 							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
 						</p>
 					</div>
+				</div>
+				<div className="flex flex-col bg-[#17191E] rounded-lg p-2">
+					<p className="text-sm flex justify-between items-center bg-[#17191E] rounded-lg p-2">
+						<span className="text-gray-500">Percent of circulating supply locked</span>
+						<span>
+							<span className="text-white">
+								{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%
+							</span>
+						</span>
+					</p>
 				</div>
 				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
 			</div>
