@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "apexcharts": "^3.45.2",
     "axios": "^1.6.7",
     "classnames": "^2.5.1",
     "lightweight-charts": "^4.1.3",
