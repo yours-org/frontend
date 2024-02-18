@@ -38,8 +38,12 @@ function groupData(data, interval) {
 	return groupedData
 }
 
-export default function Chart(props) {
-	const { data, unlockData, mempoolData, height } = props
+export default function Chart(props: {
+	height: number
+	data: any
+	unlockData: any
+	mempoolData: any
+}) {
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
