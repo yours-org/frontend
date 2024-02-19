@@ -6,6 +6,7 @@ import React, { useEffect, useRef } from 'react'
 import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
+import Blockheight from '@/components/blockheight'
 
 const TABS = ['1h', '4h', '6h', '12h', '1D']
 
@@ -269,6 +270,7 @@ export default function Chart(props: {
 							</span>
 						</span>
 					</p>
+					<div><Blockheight /></div>
 				</div>
 				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
 			</div>
