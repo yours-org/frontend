@@ -208,10 +208,10 @@ export default function Chart(props: {
 			return (
 				<div
 					className={classNames(
-						'flex justify-center bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold',
+						'flex justify-center bg-[#17191E] hover:text-white transition cursor-pointer text-xs rounded-lg p-2',
 						{
-							['text-white']: selectedTab === e,
-							['text-[#D0D5DD]']: selectedTab !== e
+							['text-white font-semibold']: selectedTab === e,
+							['text-gray-300']: selectedTab !== e
 						}
 					)}
 					key={e}
@@ -227,7 +227,7 @@ export default function Chart(props: {
 	return (
 		<div className="h-full w-full relative">
 			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
-				<p className="text-sm font-semibold text-white">Locked Coins</p>
+				<p className="text-sm font-semibold text-white">Locked BSV</p>
 				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
 					<div className="flex flex-col">
 						<div className="flex gap-2 items-center">
@@ -262,7 +262,7 @@ export default function Chart(props: {
 				</div>
 				<div className="flex flex-col bg-[#17191E] rounded-lg p-2">
 					<p className="text-sm flex justify-between items-center bg-[#17191E] rounded-lg p-2">
-						<span className="text-gray-500">Percent of circulating supply locked</span>
+						<span className="text-gray-300">Percent of circulating supply locked</span>
 						<span>
 							<span className="text-white">
 								{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%
