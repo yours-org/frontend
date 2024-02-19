@@ -14,8 +14,9 @@ export default function useChainInfo() {
 	)
 
 	const tip = (data?.blocks) || 0
+	
 	const historyTip = lockHistoryData ? parseInt(lockHistoryData?.slice(-1)?.[0]?.height, 10) : 0
-
+	data.tip = historyTip;
 	console.log({ tip, historyTip, blockDiff: tip - historyTip })
 
 	return { data, isLoading }
