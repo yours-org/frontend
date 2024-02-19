@@ -208,7 +208,7 @@ export default function Chart(props: {
 			return (
 				<div
 					className={classNames(
-						'flex justify-center bg-[#17191E] hover:text-white transition cursor-pointer text-xs rounded-lg p-2',
+						'flex justify-center bg-[#17191E] hover:text-white transition duration-200 hover:-translate-y-0.5 hover:bg-gray-800 cursor-pointer text-xs rounded-lg p-2',
 						{
 							['text-white font-semibold']: selectedTab === e,
 							['text-gray-300']: selectedTab !== e
