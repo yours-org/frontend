@@ -262,7 +262,7 @@ export default function Chart(props: {
 				</div>
 				<div className="flex flex-col bg-[#17191E] rounded-lg p-2">
 					<p className="text-sm flex justify-between items-center bg-[#17191E] rounded-lg p-2">
-						<span className="text-gray-500">Percent of circulating supply locked</span>
+						<span className="text-gray-300">Percent of circulating supply locked</span>
 						<span>
 							<span className="text-white">
 								{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%
