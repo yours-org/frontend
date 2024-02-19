@@ -5,13 +5,13 @@ const Blockheight: React.FC = () => {
   const { data, isLoading, lastProcessed } = useChainInfo();
 
   return (
-    <div>
+    <div className="bg-[#17191E] rounded-lg p-2">
       {isLoading ? (
-        <p>Loading chain info...</p>
+        <p className="text-sm text-gray-300">Loading chain info...</p>
       ) : (
-        <div className="flex text-sm ml-2">
-          <div className='w-full text-gray-300'> Block Height: </div>
-          <div className='w-full mr-2 text-xs text-right text-white'>{lastProcessed} / {data?.blocks}</div>
+        <div className="text-sm flex justify-between items-center">
+          <span className="text-gray-300">Block height</span>
+          <span className="text-white">{lastProcessed} / {data?.blocks}</span>
         </div>
       )}
     </div>
