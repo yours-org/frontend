@@ -227,7 +227,7 @@ export default function Chart(props: {
 	return (
 		<div className="h-full w-full relative">
 			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
-				<p className="text-sm font-semibold text-white">Locked Coins</p>
+				<p className="text-sm font-semibold text-white">Locked BSV</p>
 				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
 					<div className="flex flex-col">
 						<div className="flex gap-2 items-center">
