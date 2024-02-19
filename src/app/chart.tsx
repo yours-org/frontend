@@ -208,10 +208,10 @@ export default function Chart(props: {
 			return (
 				<div
 					className={classNames(
-						'flex justify-center bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold',
+						'flex justify-center bg-[#17191E] hover:text-white transition cursor-pointer text-xs rounded-lg p-2',
 						{
-							['text-white']: selectedTab === e,
-							['text-[#D0D5DD]']: selectedTab !== e
+							['text-white font-semibold']: selectedTab === e,
+							['text-gray-300']: selectedTab !== e
 						}
 					)}
 					key={e}
