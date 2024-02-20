@@ -22,18 +22,29 @@ Together, we can make Bitcoin great again.
 
 ## Getting Started
 
-First, run the development server:
+**Requirements:** 
+- package manager, such as npm, yarn, pnpm or bun 
+- node.js
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Run yours.org locally:**
+1) Download yours.org zipfile from github and extract.
+2) Open filepath in shell or cmd:
+   ```bash
+   cd /frontend-master
+   ```
+4) Run the development server:
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   pnpm dev
+   # or
+   bun dev
+   ```
+5) Wait for start localhost and wait for compile to finish
+6) Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Edit yours.org:**
+- You can start editing the page by modifying `app/page.tsx`.
+- The page auto-updates as you edit the file.
