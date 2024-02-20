@@ -31,6 +31,7 @@ Together, we can make Bitcoin great again.
 2) Open filepath in shell or cmd:
    cd /frontend-master
 4) Run the development server:
+   ```bash
    npm run dev
    # or
    yarn dev
@@ -38,6 +39,7 @@ Together, we can make Bitcoin great again.
    pnpm dev
    # or
    bun dev
+   ```
 5) Wait for start localhost and wait for compile to finish
 6) Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
