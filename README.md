@@ -29,7 +29,9 @@ Together, we can make Bitcoin great again.
 **Run yours.org locally:**
 1) Download yours.org zipfile from github and extract.
 2) Open filepath in shell or cmd:
+   ```bash
    cd /frontend-master
+   ```
 4) Run the development server:
    ```bash
    npm run dev
