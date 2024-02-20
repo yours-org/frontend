@@ -14,7 +14,7 @@ At Yours.org, we believe Bitcoin is the foundation to a brighter future. We are 
 
 **Get Involved:**
 
-You can be a part of the Hyperbitcoinization movement by visiting the Yours.org GitHub repository: https://github.com/YoursOrg.
+You can be a part of the Hyperbitcoinization movement by visiting the Yours.org GitHub repository: https://github.com/yours-org/frontend
 
 Together, we can make Bitcoin great again.
 
