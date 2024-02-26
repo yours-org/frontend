@@ -49,6 +49,9 @@ Together, we can make Bitcoin great again.
 - You can start editing the page by modifying `app/page.tsx`.
 - The page auto-updates as you edit the file.
 
+**Open Source Design**
+https://www.figma.com/community/file/1337515124574956282/yours-design-system
+
 ### License
 
 Yours.org is [MIT licensed](./LICENSE.md).
