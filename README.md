@@ -48,3 +48,7 @@ Together, we can make Bitcoin great again.
 **Edit yours.org:**
 - You can start editing the page by modifying `app/page.tsx`.
 - The page auto-updates as you edit the file.
+
+### License
+
+Yours.org is [MIT licensed](./LICENSE.md).
