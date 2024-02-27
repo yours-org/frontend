@@ -13,7 +13,7 @@ export default function Header() {
 			</div>
 			<a
 				className="text-sm text-white ml-5"
-				href="https://github.com/yours-org/frontend"
+				href="https://github.com/yours-org"
 				target="_blank"
 			>
 				<img className="h-4 w-4" src="/github.svg" />
