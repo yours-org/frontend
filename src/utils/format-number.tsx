@@ -8,6 +8,10 @@ export default function numberWithCommas(x) {
 
 	const int = parseInt(x)
 
+	if (isNaN(int)) {
+		return
+	}
+
 	if (!isNaN(int) && int > 100000000) {
 		return numAbbr.abbreviate(int, 2).toUpperCase()
 	}
