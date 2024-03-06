@@ -5,6 +5,7 @@ import useWindowSize from '@/utils/hooks/useWindowSize'
 import Loading from '@/components/loading'
 import Chart from './chart'
 import useLockHistory from '@/utils/hooks/useLockHistory'
+import Lock from './lock'
 
 export default function Home() {
 	const { height, width } = useWindowSize()
@@ -23,6 +24,7 @@ export default function Home() {
 	return (
 		<main className="flex w-full relative">
 			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
+			<Lock />
 		</main>
 	)
 }
