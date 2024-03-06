@@ -25,7 +25,9 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "experimentalDecorators": true,
+    "target": "ESNext"
   },
   "include": [
     "next-env.d.ts",
