@@ -19,12 +19,12 @@ export default function Home() {
 		)
 	}
 
-	const chartHeight = width < 768 ? height - 204 : height - 72
+	const chartHeight = 600
 
 	return (
 		<main className="flex w-full relative">
 			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
-			<Lock />
+			{/* <Lock /> */}
 		</main>
 	)
 }

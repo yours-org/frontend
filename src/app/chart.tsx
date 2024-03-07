@@ -6,6 +6,9 @@ import React, { useEffect, useRef } from 'react'
 import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
+import useChainInfo from '@/utils/hooks/useChainInfo'
+
+import { Card, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 
 const TABS = ['1h', '4h', '6h', '12h', '1D']
 
@@ -44,6 +47,7 @@ export default function Chart(props: {
 	unlockData: any
 	mempoolData: any
 }) {
+	const { data: chainInfo } = useChainInfo()
 	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
@@ -174,13 +178,13 @@ export default function Chart(props: {
 		})
 		newSeries.setData(parsedData)
 		//newSeries.setMarkers([
-			//{
-				//time: '2024-02-07',
-				//position: 'inBar',
-				//color: 'white',
-				//shape: 'circle',
-				//text: 'yours.org launch'
-			//}
+		//{
+		//time: '2024-02-07',
+		//position: 'inBar',
+		//color: 'white',
+		//shape: 'circle',
+		//text: 'yours.org launch'
+		//}
 		//])
 
 		// Lock Volume
@@ -223,17 +227,36 @@ export default function Chart(props: {
 	)
 
 	return (
-		<div className="h-full w-full relative">
-			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
-				<p className="text-sm font-semibold text-white">Locked Coins</p>
-				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
-					<div className="flex flex-col">
-						<div className="flex gap-2 items-center">
+		<div className="w-full">
+			<div className="flex grid grid-cols-4">
+				<Card>
+					<CardHeader>
+						<CardDescription>Locked bsv</CardDescription>
+						<CardTitle className="flex items-center">
 							<img src="/bsv.svg" className="h-4 w-4" />
 							<p className="text-2xl text-white whitespace-nowrap">
 								{formatNumber(tvl.toFixed(2))}
 							</p>
-						</div>
+						</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
+						<CardDescription>Percentage of supply locked</CardDescription>
+						<CardTitle>0.07%</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
+						<CardDescription>Block height indexed</CardDescription>
+						<CardTitle>{chainInfo?.height}</CardTitle>
+					</CardHeader>
+				</Card>
+			</div>
+			<div>
+				<div className="">
+					<div className="">
+						<div className=""></div>
 						<p
 							className={classNames('text-sm whitespace-nowrap', {
 								['text-[#6CE9A6]']: percentChange > 0,
@@ -260,7 +283,7 @@ export default function Chart(props: {
 				</div>
 				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
 			</div>
-			<div className="h-full w-full" ref={ref} />
+			<div className="h-[600px] w-full" ref={ref} />
 		</div>
 	)
 }
