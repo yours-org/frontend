@@ -1,8 +1,5 @@
 'use client'
 
-import { bsv, DefaultProvider, Ripemd160, hash160, findSig, MethodCallOptions } from 'scrypt-ts'
-
-import { PandaSigner } from '@/contracts/providers/panda'
 import React from 'react'
 import useChainInfo from '@/utils/hooks/useChainInfo'
 import Loading from '@/components/loading'
@@ -24,8 +21,6 @@ import { Button } from '@/components/ui/button'
 import useLoggedIn, { useLogin } from '@/utils/hooks/useLoggedIn'
 import useWalletBalance from '@/utils/hooks/useWalletBalance'
 
-import { Lockup, LockupArtifact } from '@/contracts/lockup'
-Lockup.loadArtifact(LockupArtifact)
 
 const TABS = ['1H', '6H', '12H', '1D', '1W']
 
@@ -62,6 +57,14 @@ export default function Locking() {
 
 	const handleLock = React.useCallback(async () => {
 		setLoading(true)
+
+		// @ts-ignore
+		const { bsv, DefaultProvider, Ripemd160, hash160, findSig, MethodCallOptions } = await import(
+			'scrypt-ts'
+		)
+		const { PandaSigner } = await import('@/contracts/providers/panda')
+		const { Lockup, LockupArtifact } = await import( '@/contracts/lockup')
+		Lockup.loadArtifact(LockupArtifact)
 
 		try {
 			const provider = new DefaultProvider()
@@ -118,43 +121,43 @@ export default function Locking() {
 		setLoading(false)
 	}, [chainInfo, selectedTab, value, toast])
 
-	const handleUnlock = React.useCallback(async () => {
-		const provider = new DefaultProvider()
-		const signer = new PandaSigner(provider)
+	//const handleUnlock = React.useCallback(async () => {
+		//const provider = new DefaultProvider()
+		//const signer = new PandaSigner(provider)
 
-		const { isAuthenticated, error } = await signer.requestAuth()
-		if (!isAuthenticated) {
-			// something went wrong, throw an Error with `error` message
-			throw new Error(error)
-		}
+		//const { isAuthenticated, error } = await signer.requestAuth()
+		//if (!isAuthenticated) {
+			//// something went wrong, throw an Error with `error` message
+			//throw new Error(error)
+		//}
 
-		const tx = await signer.connectedProvider.getTransaction(
-			'14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
-		)
+		//const tx = await signer.connectedProvider.getTransaction(
+			//'14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
+		//)
 
-		const pubkey = await signer.getIdentityPubKey()
+		//const pubkey = await signer.getIdentityPubKey()
 
-		const instance = Lockup.fromTx(tx, 0)
+		//const instance = Lockup.fromTx(tx, 0)
 
-		await instance.connect(signer)
+		//await instance.connect(signer)
 
-		const { tx: callTx, atInputIndex } = await instance.methods.redeem(
-			(sigResps) => findSig(sigResps, pubkey),
-			pubkey.toHex(),
-			{
-				pubKeyOrAddrToSign: pubkey,
-				lockTime: Number(instance.lockUntilHeight) + 1,
-				fromUTXO: {
-					script: tx.outputs[0].script.toBuffer().toString('hex'),
-					outputIndex: 0,
-					satoshis: 1,
-					txId: '14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
-				}
-			} as MethodCallOptions<Lock>
-		)
+		//const { tx: callTx, atInputIndex } = await instance.methods.redeem(
+			//(sigResps) => findSig(sigResps, pubkey),
+			//pubkey.toHex(),
+			//{
+				//pubKeyOrAddrToSign: pubkey,
+				//lockTime: Number(instance.lockUntilHeight) + 1,
+				//fromUTXO: {
+					//script: tx.outputs[0].script.toBuffer().toString('hex'),
+					//outputIndex: 0,
+					//satoshis: 1,
+					//txId: '14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
+				//}
+			//} as MethodCallOptions<Lock>
+		//)
 
-		console.log({ callTx, atInputIndex })
-	}, [chainInfo])
+		//console.log({ callTx, atInputIndex })
+	//}, [chainInfo])
 
 	const renderTab = React.useCallback(
 		(e) => {

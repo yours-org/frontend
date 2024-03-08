@@ -1,5 +1,4 @@
-import { PandaSigner } from '@/contracts/providers/panda'
-import { Signer, DefaultProvider } from 'scrypt-ts'
+'use client'
 
 const ADDRESS = 'yours::address'
 
@@ -20,15 +19,19 @@ export default class Wallet {
 		return localStorage.removeItem(ADDRESS)
 	}
 
-	public static get signer(): Signer {
+	public static async signer(): Promise<any> {
+		const { PandaSigner } = await import('@/contracts/providers/panda')
+		const { Signer, DefaultProvider } = await import('scrypt-ts')
+
 		return new PandaSigner(new DefaultProvider())
 	}
 
 	public static async requestAuth() {
-		const { isAuthenticated, error } = await this.signer.requestAuth()
+		const signer = await this.signer();
+		const { isAuthenticated, error } = await signer.requestAuth()
 
 		if (isAuthenticated) {
-			const address = await this.signer.getDefaultAddress()
+			const address = await signer.getDefaultAddress()
 			localStorage.setItem(ADDRESS, address.toString())
 		}
 	}
