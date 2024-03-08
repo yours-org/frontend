@@ -22,12 +22,20 @@ export default class Wallet {
 	public static async signer(): Promise<any> {
 		const { PandaSigner } = await import('@/contracts/providers/panda')
 		const { Signer, DefaultProvider } = await import('scrypt-ts')
-
 		return new PandaSigner(new DefaultProvider())
 	}
 
 	public static async requestAuth() {
-		const signer = await this.signer();
+		// @ts-ignore
+		if (!window.panda) {
+			window.open(
+				'https://chromewebstore.google.com/detail/yours-wallet/mlbnicldlpdimbjdcncnklfempedeipj',
+				'_blank'
+			)
+			return
+		}
+
+		const signer = await this.signer()
 		const { isAuthenticated, error } = await signer.requestAuth()
 
 		if (isAuthenticated) {

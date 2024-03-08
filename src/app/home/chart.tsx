@@ -7,7 +7,7 @@ import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
 import useChainInfo from '@/utils/hooks/useChainInfo'
-import Lock from '@/app/lock'
+import Lock from '@/app/home/lock'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
@@ -266,13 +266,13 @@ export default function Chart(props: {
 				</Card>
 			</div>
 			<div className="grid grid-cols-8 gap-4">
-				<Card className="relative col-span-6">
+				<Card className="relative col-span-8 lg:col-span-6">
 					<Tabs className="absolute ml-4 mt-4 l-0 t-0 z-10" defaultValue={selectedTab}>
 						<TabsList>{TABS.map(renderTab)}</TabsList>
 					</Tabs>
 					<div className="h-[600px] w-full" ref={ref} />
 				</Card>
-				<div className="col-span-2">
+				<div className="col-span-8 lg:col-span-2">
 					<Lock />
 				</div>
 			</div>

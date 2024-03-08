@@ -3,9 +3,8 @@
 import React from 'react'
 import useWindowSize from '@/utils/hooks/useWindowSize'
 import Loading from '@/components/loading'
-import Chart from './chart'
+import Chart from '@/app/home/chart'
 import useLockHistory from '@/utils/hooks/useLockHistory'
-import Lock from './lock'
 
 export default function Home() {
 	const { height, width } = useWindowSize()
@@ -19,11 +18,9 @@ export default function Home() {
 		)
 	}
 
-	const chartHeight = 600
-
 	return (
 		<main className="flex flex-col gap-4 w-full relative px-4">
-			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
+			<Chart height={600} data={data} unlockData={unlockData} mempoolData={mempoolData} />
 		</main>
 	)
 }

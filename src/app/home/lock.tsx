@@ -18,9 +18,18 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger
+} from '@/components/ui/dialog'
 import useLoggedIn, { useLogin } from '@/utils/hooks/useLoggedIn'
 import useWalletBalance from '@/utils/hooks/useWalletBalance'
-
+import { EXPLORER_URL } from '@/utils/constants'
 
 const TABS = ['1H', '6H', '12H', '1D', '1W']
 
@@ -29,8 +38,37 @@ export default function Locking() {
 	const [selectedTab, setSelectedTab] = React.useState('1H')
 	const [loading, setLoading] = React.useState(false)
 	const [value, setValue] = React.useState('')
+	const [open, setOpen] = React.useState(false)
+	const [params, setParams] = React.useState({
+		amount: null,
+		durationName: null,
+		txid: null,
+		height: null
+	})
+	const [txid, setTxid] = React.useState('')
 	const { toast } = useToast()
 	const { data: walletBalance } = useWalletBalance()
+
+	const handleClose = React.useCallback(() => {
+		setParams({
+			amount: null,
+			durationName: null,
+			txid: null,
+			height: null
+		})
+		setOpen(false)
+	}, [])
+
+	const handleViewTx = React.useCallback(() => {
+		window.open(`${EXPLORER_URL}/tx/${params.txid}`, '__blank')
+		handleClose()
+	}, [params, handleClose])
+
+	const handleShare = React.useCallback(() => {
+		const intent = encodeURIComponent(`I just locked BSV! Check it out 👇\n https://yours.org`)
+		window.open(`https://twitter.com/intent/tweet?text=${intent}`, '__blank')
+		handleClose()
+	}, [handleClose])
 
 	const loggedIn = useLoggedIn()
 	const logIn = useLogin()
@@ -63,7 +101,7 @@ export default function Locking() {
 			'scrypt-ts'
 		)
 		const { PandaSigner } = await import('@/contracts/providers/panda')
-		const { Lockup, LockupArtifact } = await import( '@/contracts/lockup')
+		const { Lockup, LockupArtifact } = await import('@/contracts/lockup')
 		Lockup.loadArtifact(LockupArtifact)
 
 		try {
@@ -78,6 +116,7 @@ export default function Locking() {
 			}
 
 			const sats = parseInt((parseFloat(value) * 1e8).toFixed(8))
+
 			const duration = {
 				'1H': { blocks: 6, name: '1 hour' },
 				'6H': { blocks: 36, name: '6 hours' },
@@ -95,20 +134,9 @@ export default function Locking() {
 
 			await instance.connect(signer)
 			const tx = await instance.deploy(sats)
-			toast({
-				title: `${value} BSV Lock Success!`,
-				description: `Your BSV will be unlockable in ${duration.name}`,
-				action: (
-					<ToastAction
-						altText="View Tx"
-						onClick={() => {
-							window.open(`https://whatsonchain.com/tx/${tx.id}`, '__blank')
-						}}
-					>
-						View Tx
-					</ToastAction>
-				)
-			})
+
+			setParams({ txid: tx.id, durationName: duration.name, height: blockHeight, amount: value })
+			setOpen(true)
 			setValue('')
 		} catch (e) {
 			toast({
@@ -120,44 +148,6 @@ export default function Locking() {
 
 		setLoading(false)
 	}, [chainInfo, selectedTab, value, toast])
-
-	//const handleUnlock = React.useCallback(async () => {
-		//const provider = new DefaultProvider()
-		//const signer = new PandaSigner(provider)
-
-		//const { isAuthenticated, error } = await signer.requestAuth()
-		//if (!isAuthenticated) {
-			//// something went wrong, throw an Error with `error` message
-			//throw new Error(error)
-		//}
-
-		//const tx = await signer.connectedProvider.getTransaction(
-			//'14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
-		//)
-
-		//const pubkey = await signer.getIdentityPubKey()
-
-		//const instance = Lockup.fromTx(tx, 0)
-
-		//await instance.connect(signer)
-
-		//const { tx: callTx, atInputIndex } = await instance.methods.redeem(
-			//(sigResps) => findSig(sigResps, pubkey),
-			//pubkey.toHex(),
-			//{
-				//pubKeyOrAddrToSign: pubkey,
-				//lockTime: Number(instance.lockUntilHeight) + 1,
-				//fromUTXO: {
-					//script: tx.outputs[0].script.toBuffer().toString('hex'),
-					//outputIndex: 0,
-					//satoshis: 1,
-					//txId: '14b6be76f83b5ec19dd1317a48773948c7b09e4dfcfab98e98b1b3214be32c59'
-				//}
-			//} as MethodCallOptions<Lock>
-		//)
-
-		//console.log({ callTx, atInputIndex })
-	//}, [chainInfo])
 
 	const renderTab = React.useCallback(
 		(e) => {
@@ -173,8 +163,6 @@ export default function Locking() {
 	const isInsufficient = React.useMemo(() => {
 		return parseFloat(value) > walletBalance?.satoshis / 1e8
 	}, [walletBalance, value])
-
-	console.log({ isInsufficient })
 
 	return (
 		<Card className="w-full">
@@ -231,6 +219,24 @@ export default function Locking() {
 					</Button>
 				)}
 			</CardFooter>
+			<Dialog open={open}>
+				<DialogContent onPointerDownOutside={handleClose} className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>{params.amount} BSV Lock Success!</DialogTitle>
+						<DialogDescription>
+							Your BSV will be unlockable at block {params.height}
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<Button onClick={handleViewTx} variant="outline">
+							View Transaction
+						</Button>
+						<Button onClick={handleShare} variant="gradient">
+							Share it!
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</Card>
 	)
 }

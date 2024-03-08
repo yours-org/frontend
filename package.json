@@ -6,12 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "pretest": "npx scrypt-cli compile",
-    "build:contract": "npx scrypt-cli compile",
-    "deploy:contract": "npx tsx ./scripts/deploy.ts",
-    "verify:contract": "npx scrypt-cli verify $(cat .scriptHash) ./src/contracts/frontend.ts",
-    "genprivkey": "npx tsx ./scripts/privateKey.ts"
+    "lint": "next lint"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.0.5",
