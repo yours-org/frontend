@@ -7,7 +7,9 @@ import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
 import useChainInfo from '@/utils/hooks/useChainInfo'
+import Lock from '@/app/lock'
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 
 const TABS = ['1h', '4h', '6h', '12h', '1D']
@@ -47,7 +49,7 @@ export default function Chart(props: {
 	unlockData: any
 	mempoolData: any
 }) {
-	const { data: chainInfo } = useChainInfo()
+	const { data: chainInfo, isLoading, lastProcessed } = useChainInfo()
 	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
@@ -72,19 +74,20 @@ export default function Chart(props: {
 		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
 		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
 
-		console.log({
-			lastLock,
-			lastUnlock,
-			dayAgoLock,
-			dayAgoUnlock,
-			diff: tvl - dayAgoTvl,
-			mempool: mempoolSats
-		})
-
+		//console.log({
+			//lastLock,
+			//lastUnlock,
+			//dayAgoLock,
+			//dayAgoUnlock,
+			//diff: tvl - dayAgoTvl,
+			//mempool: mempoolSats
+		//})
 		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
 
 		return { tvl, percentChange, dayAgoTvl }
 	}, [data, unlockData, mempoolData])
+
+	const totalCirculatingSupply = 19600000 // 19.6M
 
 	const ref = useRef()
 
@@ -208,82 +211,71 @@ export default function Chart(props: {
 	const renderTab = React.useCallback(
 		(e) => {
 			return (
-				<div
-					className={classNames(
-						'flex justify-center bg-[#17191E] cursor-pointer text-xs rounded-lg p-2 font-semibold',
-						{
-							['text-white']: selectedTab === e,
-							['text-[#D0D5DD]']: selectedTab !== e
-						}
-					)}
-					key={e}
-					onClick={() => setSelectedTab(e)}
-				>
+				<TabsTrigger key={e} value={e} onClick={() => setSelectedTab(e)}>
 					{e}
-				</div>
+				</TabsTrigger>
 			)
 		},
 		[selectedTab]
 	)
 
 	return (
-		<div className="w-full">
-			<div className="flex grid grid-cols-4">
+		<div className="w-full flex flex-col gap-4">
+			<div className="flex grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
 				<Card>
 					<CardHeader>
 						<CardDescription>Locked bsv</CardDescription>
-						<CardTitle className="flex items-center">
-							<img src="/bsv.svg" className="h-4 w-4" />
-							<p className="text-2xl text-white whitespace-nowrap">
+						<CardTitle className="flex items-center justify-between">
+							<div className="flex items-center gap-2">
+								<img src="/bsv.svg" className="h-5 w-5" />
 								{formatNumber(tvl.toFixed(2))}
+							</div>
+							<p
+								className={classNames(
+									'bg-opacity-20 px-2 h-[24px] flex items-center rounded-lg text-sm whitespace-nowrap',
+									{
+										['text-[#6CE9A6] bg-[#6CE9A6]']: percentChange > 0,
+										['text-red-500 bg-red-500']: percentChange < 0
+									}
+								)}
+							>
+								{percentChange.toFixed(2).replace('-', '')}%
 							</p>
 						</CardTitle>
 					</CardHeader>
 				</Card>
 				<Card>
 					<CardHeader>
+						<CardDescription>Locked usd</CardDescription>
+						<CardTitle>${formatNumber((tvl * exchangeRate).toFixed(2))}</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
 						<CardDescription>Percentage of supply locked</CardDescription>
-						<CardTitle>0.07%</CardTitle>
+						<CardTitle>{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%</CardTitle>
 					</CardHeader>
 				</Card>
 				<Card>
 					<CardHeader>
 						<CardDescription>Block height indexed</CardDescription>
-						<CardTitle>{chainInfo?.height}</CardTitle>
+						<CardTitle>
+							{lastProcessed}/{chainInfo?.blocks}
+						</CardTitle>
 					</CardHeader>
 				</Card>
 			</div>
-			<div>
-				<div className="">
-					<div className="">
-						<div className=""></div>
-						<p
-							className={classNames('text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
-							{percentChange.toFixed(2)}%)
-						</p>
-					</div>
-					<div className="flex flex-col">
-						<p className="text-2xl text-white whitespace-nowrap">
-							${formatNumber((tvl * exchangeRate).toFixed(2))}
-						</p>
-						<p
-							className={classNames('text-right text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
-						</p>
-					</div>
+			<div className="grid grid-cols-8 gap-4">
+				<Card className="relative col-span-6">
+					<Tabs className="absolute ml-4 mt-4 l-0 t-0 z-10" defaultValue={selectedTab}>
+						<TabsList>{TABS.map(renderTab)}</TabsList>
+					</Tabs>
+					<div className="h-[600px] w-full" ref={ref} />
+				</Card>
+				<div className="col-span-2">
+					<Lock />
 				</div>
-				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
 			</div>
-			<div className="h-[600px] w-full" ref={ref} />
 		</div>
 	)
 }

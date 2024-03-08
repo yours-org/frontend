@@ -22,9 +22,8 @@ export default function Home() {
 	const chartHeight = 600
 
 	return (
-		<main className="flex w-full relative">
+		<main className="flex flex-col gap-4 w-full relative px-4">
 			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
-			{/* <Lock /> */}
 		</main>
 	)
 }

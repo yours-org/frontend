@@ -27,11 +27,7 @@ export default function Header() {
 				<img src="/logo.svg" className="h-10" />
 			</div>
 			<div className="flex items-center gap-4">
-				<a
-					className="text-sm text-white ml-5"
-					href="https://github.com/yours-org/frontend"
-					target="_blank"
-				>
+				<a className="text-sm text-white ml-5" href="https://github.com/yours-org" target="_blank">
 					<img className="h-4 w-4" src="/github.svg" />
 				</a>
 				{!loggedIn && (
