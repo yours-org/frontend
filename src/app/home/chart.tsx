@@ -6,7 +6,11 @@ import React, { useEffect, useRef } from 'react'
 import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
-import Blockheight from '@/components/blockheight'
+import useChainInfo from '@/utils/hooks/useChainInfo'
+import Lock from '@/app/home/lock'
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardHeader, CardDescription, CardTitle } from '@/components/ui/card'
 
 const TABS = ['1h', '4h', '6h', '12h', '1D']
 
@@ -45,6 +49,7 @@ export default function Chart(props: {
 	unlockData: any
 	mempoolData: any
 }) {
+	const { data: chainInfo, isLoading, lastProcessed } = useChainInfo()
 	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
@@ -69,15 +74,14 @@ export default function Chart(props: {
 		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
 		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
 
-		console.log({
-			lastLock,
-			lastUnlock,
-			dayAgoLock,
-			dayAgoUnlock,
-			diff: tvl - dayAgoTvl,
-			mempool: mempoolSats
-		})
-
+		//console.log({
+			//lastLock,
+			//lastUnlock,
+			//dayAgoLock,
+			//dayAgoUnlock,
+			//diff: tvl - dayAgoTvl,
+			//mempool: mempoolSats
+		//})
 		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
 
 		return { tvl, percentChange, dayAgoTvl }
@@ -177,13 +181,13 @@ export default function Chart(props: {
 		})
 		newSeries.setData(parsedData)
 		//newSeries.setMarkers([
-			//{
-				//time: '2024-02-07',
-				//position: 'inBar',
-				//color: 'white',
-				//shape: 'circle',
-				//text: 'yours.org launch'
-			//}
+		//{
+		//time: '2024-02-07',
+		//position: 'inBar',
+		//color: 'white',
+		//shape: 'circle',
+		//text: 'yours.org launch'
+		//}
 		//])
 
 		// Lock Volume
@@ -207,74 +211,71 @@ export default function Chart(props: {
 	const renderTab = React.useCallback(
 		(e) => {
 			return (
-				<div
-					className={classNames(
-						'flex justify-center bg-[#17191E] hover:text-white transition duration-200 hover:-translate-y-0.5 hover:bg-gray-800 cursor-pointer text-xs rounded-lg p-2',
-						{
-							['text-white font-semibold']: selectedTab === e,
-							['text-gray-300']: selectedTab !== e
-						}
-					)}
-					key={e}
-					onClick={() => setSelectedTab(e)}
-				>
+				<TabsTrigger key={e} value={e} onClick={() => setSelectedTab(e)}>
 					{e}
-				</div>
+				</TabsTrigger>
 			)
 		},
 		[selectedTab]
 	)
 
 	return (
-		<div className="h-full w-full relative">
-			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
-				<p className="text-sm font-semibold text-white">Locked BSV</p>
-				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
-					<div className="flex flex-col">
-						<div className="flex gap-2 items-center">
-							<img src="/bsv.svg" className="h-4 w-4" />
-							<p className="text-2xl text-white whitespace-nowrap">
+		<div className="w-full flex flex-col gap-4">
+			<div className="flex grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+				<Card>
+					<CardHeader>
+						<CardDescription>Locked bsv</CardDescription>
+						<CardTitle className="flex items-center justify-between">
+							<div className="flex items-center gap-2">
+								<img src="/bsv.svg" className="h-5 w-5" />
 								{formatNumber(tvl.toFixed(2))}
+							</div>
+							<p
+								className={classNames(
+									'bg-opacity-20 px-2 h-[24px] flex items-center rounded-lg text-sm whitespace-nowrap',
+									{
+										['text-[#6CE9A6] bg-[#6CE9A6]']: percentChange > 0,
+										['text-red-500 bg-red-500']: percentChange < 0
+									}
+								)}
+							>
+								{percentChange.toFixed(2).replace('-', '')}%
 							</p>
-						</div>
-						<p
-							className={classNames('text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
-							{percentChange.toFixed(2)}%)
-						</p>
-					</div>
-					<div className="flex flex-col">
-						<p className="text-2xl text-white whitespace-nowrap">
-							${formatNumber((tvl * exchangeRate).toFixed(2))}
-						</p>
-						<p
-							className={classNames('text-right text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
-						</p>
-					</div>
-				</div>
-				<div className="flex flex-col bg-[#17191E] rounded-lg p-2">
-					<p className="text-sm flex justify-between items-center bg-[#17191E] rounded-lg p-2">
-						<span className="text-gray-300">Percent of circulating supply locked</span>
-						<span>
-							<span className="text-white">
-								{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%
-							</span>
-						</span>
-					</p>
-					<div><Blockheight /></div>
-				</div>
-				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
+						</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
+						<CardDescription>Locked usd</CardDescription>
+						<CardTitle>${formatNumber((tvl * exchangeRate).toFixed(2))}</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
+						<CardDescription>Percentage of supply locked</CardDescription>
+						<CardTitle>{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%</CardTitle>
+					</CardHeader>
+				</Card>
+				<Card>
+					<CardHeader>
+						<CardDescription>Block height indexed</CardDescription>
+						<CardTitle>
+							{lastProcessed}/{chainInfo?.blocks}
+						</CardTitle>
+					</CardHeader>
+				</Card>
 			</div>
-			<div className="h-full w-full" ref={ref} />
+			<div className="grid grid-cols-8 gap-4">
+				<Card className="relative col-span-8 lg:col-span-6">
+					<Tabs className="absolute ml-4 mt-4 l-0 t-0 z-10" defaultValue={selectedTab}>
+						<TabsList>{TABS.map(renderTab)}</TabsList>
+					</Tabs>
+					<div className="h-[600px] w-full" ref={ref} />
+				</Card>
+				<div className="col-span-8 lg:col-span-2">
+					<Lock />
+				</div>
+			</div>
 		</div>
 	)
 }

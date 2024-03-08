@@ -17,7 +17,7 @@ export default function useChainInfo() {
 	
 	const historyTip = lockHistoryData ? parseInt(lockHistoryData?.slice(-1)?.[0]?.height, 10) : 0
 	const lastProcessed = historyTip;
-	console.log({ tip, historyTip, blockDiff: tip - historyTip })
+	//console.log({ tip, historyTip, blockDiff: tip - historyTip })
 
 	return { data, isLoading, lastProcessed}
 }

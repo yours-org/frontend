@@ -3,7 +3,7 @@
 import React from 'react'
 import useWindowSize from '@/utils/hooks/useWindowSize'
 import Loading from '@/components/loading'
-import Chart from './chart'
+import Chart from '@/app/home/chart'
 import useLockHistory from '@/utils/hooks/useLockHistory'
 
 export default function Home() {
@@ -18,11 +18,9 @@ export default function Home() {
 		)
 	}
 
-	const chartHeight = width < 768 ? height - 204 : height - 72
-
 	return (
-		<main className="flex w-full relative">
-			<Chart height={chartHeight} data={data} unlockData={unlockData} mempoolData={mempoolData} />
+		<main className="flex flex-col gap-4 w-full relative px-4">
+			<Chart height={600} data={data} unlockData={unlockData} mempoolData={mempoolData} />
 		</main>
 	)
 }
