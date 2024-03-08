@@ -4,9 +4,6 @@ import { bsv, DefaultProvider, Ripemd160, hash160, findSig, MethodCallOptions } 
 
 import { PandaSigner } from '@/contracts/providers/panda'
 import React from 'react'
-import { Lockup } from '@/contracts/lockup'
-import artifact from '../../artifacts/lockup.json'
-Lockup.loadArtifact(artifact)
 import useChainInfo from '@/utils/hooks/useChainInfo'
 import Loading from '@/components/loading'
 import { useToast } from '@/components/ui/use-toast'
@@ -26,6 +23,9 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import useLoggedIn, { useLogin } from '@/utils/hooks/useLoggedIn'
 import useWalletBalance from '@/utils/hooks/useWalletBalance'
+
+import { Lockup, LockupArtifact } from '@/contracts/lockup'
+Lockup.loadArtifact(LockupArtifact)
 
 const TABS = ['1H', '6H', '12H', '1D', '1W']
 
