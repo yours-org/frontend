@@ -65,7 +65,7 @@ export default function Locking() {
 	}, [params, handleClose])
 
 	const handleShare = React.useCallback(() => {
-		const intent = encodeURIComponent(`I just locked BSV! Check it out 👇\n https://yours.org`)
+		const intent = encodeURIComponent(`I just locked BSV on @yoursxbt! Check it out 👇 yours.org\n https://yours.org`)
 		window.open(`https://twitter.com/intent/tweet?text=${intent}`, '__blank')
 		handleClose()
 	}, [handleClose])
