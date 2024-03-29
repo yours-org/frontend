@@ -31,11 +31,11 @@ import useLoggedIn, { useLogin } from '@/utils/hooks/useLoggedIn'
 import useWalletBalance from '@/utils/hooks/useWalletBalance'
 import { EXPLORER_URL } from '@/utils/constants'
 
-const TABS = ['1H', '6H', '12H', '1D', '1W']
+const TABS = ['1Y', '2Y', '3Y', '4Y', '5Y']
 
 export default function Locking() {
 	const { data: chainInfo } = useChainInfo()
-	const [selectedTab, setSelectedTab] = React.useState('1H')
+	const [selectedTab, setSelectedTab] = React.useState('1Y')
 	const [loading, setLoading] = React.useState(false)
 	const [value, setValue] = React.useState('')
 	const [open, setOpen] = React.useState(false)
@@ -117,12 +117,13 @@ export default function Locking() {
 
 			const sats = parseInt((parseFloat(value) * 1e8).toFixed(8))
 
+			const BLOCKS_IN_1_YEAR = 144 * 365;
 			const duration = {
-				'1H': { blocks: 6, name: '1 hour' },
-				'6H': { blocks: 36, name: '6 hours' },
-				'12H': { blocks: 72, name: '12 hours' },
-				'1D': { blocks: 144, name: '1 day' },
-				'1W': { blocks: 1008, name: '1 week' }
+				'1Y': { blocks: BLOCKS_IN_1_YEAR * 1, name: '1 year' },
+				'2Y': { blocks: BLOCKS_IN_1_YEAR * 2, name: '2 years' },
+				'3Y': { blocks: BLOCKS_IN_1_YEAR * 3, name: '3 years' },
+				'4Y': { blocks: BLOCKS_IN_1_YEAR * 4, name: '4 years' },
+				'5Y': { blocks: BLOCKS_IN_1_YEAR * 5, name: '5 years' }
 			}[selectedTab]
 
 			const blockHeight = chainInfo.blocks + duration.blocks
