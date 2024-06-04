@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 
 export default function Home() {
 	return (
-		<main className="flex flex-col gap-4 w-full relative max-w-screen-2xl container py-12">
+		<main className="flex flex-col gap-4 w-full relative max-w-screen-xl container py-12">
 			<div className="gap-8 grid grid-cols-1 lg:grid-cols-2">
 				<div className="flex flex-col gap-5 items-center lg:items-start">
 					<h1 className="font-bold text-3xl">Yours Wallet</h1>
