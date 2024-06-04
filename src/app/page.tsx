@@ -8,8 +8,8 @@ export default function Home() {
 		<main className="flex flex-col gap-4 w-full relative max-w-screen-xl container py-12">
 			<div className="gap-8 grid grid-cols-1 lg:grid-cols-2">
 				<div className="flex flex-col gap-5 items-center lg:items-start">
-					<h1 className="font-bold text-3xl">Yours Wallet</h1>
-					<p className="text-sm text-[#D4D4D8]">
+					<h1 className="font-bold text-4xl">Yours Wallet</h1>
+					<p className="text-md text-center lg:text-left max-w-[600px] text-[#D4D4D8]">
 						Yours is an open-source wallet for managing your BSV, on-chain assets and more. Download
 						the wallet extension to get started.
 					</p>
