@@ -30,10 +30,10 @@ export default function Home() {
 							</Button>
 						</a>
 					</div>
-				</div>
+				</div> 
 				<div className="flex justify-center">
-					<div className="absolute top-0 right-0 z-[-1] bg-gradient-to-l from-[#22C55E] h-[800px] w-[800px]"></div>
-					<img className="w-[400px] max-w-full rounded-xl" src="/wallet.png" />
+					{/* <div className="absolute top-0 right-0 z-[-1] bg-[radial-gradient(169.40%_89.55%_at_94.76%_6.29%,rgba(34,197,94,0.8)_0%,rgba(34,197,94,0)_100%)] h-[600px] w-[700px]"></div> */}
+					<img className="w-[400px] max-w-full rounded-xl shadow-[0px_-38px_250px_0px_rgba(34,197,94,0.10)]" src="/wallet.png" />
 				</div>
 			</div>
 		</main>
