@@ -19,14 +19,14 @@ export default function Header() {
 							Download Extension
 						</Button>
 					</a>
-					<a className="text-sm text-white" href="https://x.com/yoursxbt" target="_blank">
-						<img className="h-4 w-4" src="/github.svg" />
-					</a>
 					<a
 						className="text-sm text-white"
 						href="https://github.com/yours-org/yours-wallet"
 						target="_blank"
 					>
+						<img className="h-4 w-4" src="/github.svg" />
+					</a>
+					<a className="text-sm text-white" href="https://x.com/yoursxbt" target="_blank">
 						<img className="h-4 w-4" src="/twitter.svg" />
 					</a>
 				</div>
