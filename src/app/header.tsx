@@ -14,6 +14,7 @@ export default function Header() {
 					<a
 						href="https://chromewebstore.google.com/detail/yours-wallet/mlbnicldlpdimbjdcncnklfempedeipj?pli=1"
 						target="_blank"
+						className="hidden md:block"
 					>
 						<Button className="bg-[linear-gradient(45deg,rgb(161,255,139),rgb(52,211,153))]">
 							Download Extension
