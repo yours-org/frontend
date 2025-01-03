@@ -1,7 +1,9 @@
 ## Getting Started
 
 If you would like to donate to yours.org development you can send BSV to 
-```1AtwAyqcJHA4v3Auq1NSy5yLqbJYWhJBKJ```
+```bash 
+1AtwAyqcJHA4v3Auq1NSy5yLqbJYWhJBKJ
+```
 
 **Requirements:** 
 - package manager, such as npm, yarn, pnpm or bun 
