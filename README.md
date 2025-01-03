@@ -1,6 +1,6 @@
 ## Getting Started
 
-If you would like to donate to yours.org development you can send BSV to 
+If you would like to donate to yours.org development you can send BSV to:
 ```bash 
 1AtwAyqcJHA4v3Auq1NSy5yLqbJYWhJBKJ
 ```
