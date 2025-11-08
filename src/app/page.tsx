@@ -56,7 +56,7 @@ const footerLinks = [
 	{ href: '#overview', label: 'Overview' },
 	{ href: '#stats', label: 'Network' },
 	{ href: '#toolkit', label: 'Tooling' },
-	{ href: '#network', label: 'Ecosystem' }
+	{ href: '#ecosystem', label: 'Ecosystem' }
 ]
 
 export default function Home() {
@@ -179,38 +179,6 @@ export default function Home() {
 						</div>
 					))}
 				</div>
-			</section>
-
-			<section
-				id="network"
-				className="mx-auto mt-24 w-full max-w-7xl px-6"
-			>
-				<div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-					<div className="space-y-2">
-						<p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">Network data</p>
-						<h2 className="text-3xl font-semibold text-white md:text-4xl">
-							Live locks, unlocks, and mempool flow.
-						</h2>
-						<p className="max-w-xl text-sm text-white/65">
-							Quantify liquidity moving through Yours contract rails, compare daily velocity, and understand
-							how mempool congestion correlates with lock demand.
-						</p>
-					</div>
-					<a
-						href="https://github.com/yours-org"
-						target="_blank"
-						rel="noreferrer"
-						className="inline-flex items-center gap-2 self-start rounded-full border border-white/15 px-5 py-3 text-sm font-semibold text-white/80 transition hover:text-white hover:border-white/40 hover:bg-white/10"
-					>
-						<Shield className="h-4 w-4" />
-						<span>Audit the repo</span>
-					</a>
-				</div>
-				<p className="max-w-3xl text-sm text-white/65">
-					Dive deeper into historical locks, unlock cadence, and mempool heuristics inside the Yours GitBook analytics
-					section. We publish refreshed snapshots weekly and push live data to the Provider API for builders who need
-					comprehensive coverage.
-				</p>
 			</section>
 
 			<section

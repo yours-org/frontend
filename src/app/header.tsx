@@ -12,7 +12,7 @@ const navLinks = [
 	{ href: '#overview', label: 'Overview' },
 	{ href: '#stats', label: 'Network' },
 	{ href: '#toolkit', label: 'Tooling' },
-	{ href: '#network', label: 'Ecosystem' }
+	{ href: '#ecosystem', label: 'Ecosystem' }
 ]
 
 export default function Header() {
