@@ -52,13 +52,6 @@ const resourceCards = [
 	}
 ]
 
-const footerLinks = [
-	{ href: '#overview', label: 'Overview' },
-	{ href: '#stats', label: 'Network' },
-	{ href: '#toolkit', label: 'Tooling' },
-	{ href: '#ecosystem', label: 'Ecosystem' }
-]
-
 export default function Home() {
 	const currentYear = new Date().getFullYear()
 
@@ -206,63 +199,75 @@ export default function Home() {
 			</section>
 		</main>
 			<footer className="mt-24 w-full border-t border-white/10 bg-[#050507]/80">
-				<div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 py-12 text-white md:flex-row md:items-center md:justify-between">
-					<div className="flex flex-col gap-4">
-						<Link href="/" className="flex items-center gap-3 text-white">
-							<Image src="/logo.svg" alt="Yours Wallet" width={96} height={96} className="h-20 w-20" />
-						</Link>
-						<p className="max-w-sm text-sm text-white/60">
-							Open source wallet infrastructure built for BSV developers, analytics teams, and production dApps.
-						</p>
+				<div className="mx-auto grid w-full max-w-7xl gap-6 px-6 py-12 text-white md:grid-cols-2 md:gap-y-2 md:items-start">
+					<Link
+						href="/"
+						className="flex items-center gap-3 text-white md:justify-self-start"
+					>
+						<Image src="/logo.svg" alt="Yours Wallet" width={96} height={96} className="h-20 w-20" />
+					</Link>
+					<div className="flex flex-wrap items-center gap-3 md:justify-end md:gap-4">
+						<a
+							href="https://twitter.com/yourswallet"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
+							aria-label="Follow Yours Wallet on Twitter"
+						>
+							<Twitter className="h-4 w-4" />
+						</a>
+						<a
+							href="https://github.com/yours-org"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
+							aria-label="View Yours Wallet on GitHub"
+						>
+							<GitHubLogoIcon className="h-4 w-4" />
+						</a>
+						<a
+							href="https://yours-wallet.gitbook.io/provider-api/"
+							target="_blank"
+							rel="noreferrer"
+							className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
+							aria-label="Open Yours Wallet GitBook"
+						>
+							<GitbookIcon className="h-4 w-4" />
+						</a>
+						<a
+							href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
+							target="_blank"
+							rel="noreferrer"
+							className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:border-white/40 hover:bg-white/20"
+						>
+							<Chrome className="h-4 w-4 transition group-hover:translate-y-0.5" />
+							<span>Download</span>
+						</a>
 					</div>
-					<nav className="flex flex-wrap gap-4 text-sm text-white/65">
-						{footerLinks.map(({ href, label }) => (
-							<a key={href} href={href} className="transition hover:text-white">
-								{label}
-							</a>
-						))}
-					</nav>
-					<div className="flex flex-col items-start gap-4 md:items-end">
-						<div className="flex flex-wrap items-center gap-3 md:justify-end md:gap-4">
-							<a
-								href="https://twitter.com/yourswallet"
-								target="_blank"
-								rel="noreferrer"
-								className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
-								aria-label="Follow Yours Wallet on Twitter"
-							>
-								<Twitter className="h-4 w-4" />
-							</a>
-							<a
-								href="https://github.com/yours-org"
-								target="_blank"
-								rel="noreferrer"
-								className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
-								aria-label="View Yours Wallet on GitHub"
-							>
-								<GitHubLogoIcon className="h-4 w-4" />
-							</a>
-							<a
-								href="https://yours-wallet.gitbook.io/provider-api/"
-								target="_blank"
-								rel="noreferrer"
-								className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
-								aria-label="Open Yours Wallet GitBook"
-							>
-								<GitbookIcon className="h-4 w-4" />
-							</a>
-							<a
-								href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
-								target="_blank"
-								rel="noreferrer"
-								className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-white transition hover:border-white/40 hover:bg-white/20"
-							>
-								<Chrome className="h-4 w-4 transition group-hover:translate-y-0.5" />
-								<span>Download</span>
-							</a>
-						</div>
-						<p className="text-xs text-white/50">© {currentYear} Yours Wallet. All rights reserved.</p>
-					</div>
+					<p className="max-w-sm text-xs text-white/50 md:justify-self-start">
+						Created by{' '}
+						<a
+							href="https://area21.io"
+							target="_blank"
+							rel="noreferrer"
+							className="text-white transition hover:text-white/80"
+						>
+							Area21
+						</a>{' '}
+						and{' '}
+						<a
+							href="https://x.com/danwag06"
+							target="_blank"
+							rel="noreferrer"
+							className="text-white transition hover:text-white/80"
+						>
+							Wags
+						</a>
+						.
+					</p>
+					<p className="text-xs text-white/50 md:justify-self-end">
+						© {currentYear} Yours Wallet. All rights reserved.
+					</p>
 				</div>
 			</footer>
 		</>
