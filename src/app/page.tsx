@@ -206,7 +206,7 @@ export default function Home() {
 					>
 						<Image src="/logo.svg" alt="Yours Wallet" width={96} height={96} className="h-20 w-20" />
 					</Link>
-					<div className="flex flex-wrap items-center gap-3 md:justify-end md:gap-4">
+					<div className="flex flex-wrap items-center gap-3 md:justify-self-end md:self-center md:justify-end md:gap-4">
 						<a
 							href="https://twitter.com/yourswallet"
 							target="_blank"
