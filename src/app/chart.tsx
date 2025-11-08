@@ -10,6 +10,10 @@ import classNames from 'classnames'
 const TABS = ['1h', '4h', '6h', '12h', '1D']
 
 function groupData(data, interval) {
+	if (!Array.isArray(data) || data.length === 0) {
+		return {}
+	}
+
 	const groupedData = {}
 	const intervalMilliseconds = {
 		'10m': 10 * 60 * 1000,
@@ -40,46 +44,88 @@ function groupData(data, interval) {
 
 export default function Chart(props: {
 	height: number
-	data: any
-	unlockData: any
+	data: any[]
+	unlockData: any[]
 	mempoolData: any
 }) {
 	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
 	const [selectedTab, setSelectedTab] = React.useState('1D')
 
-	const { dayAgoTvl, tvl, percentChange } = React.useMemo(() => {
-		if (!data?.length || !unlockData?.length) {
-			return null
+	const { dayAgoTvl, tvl, percentChange, ready } = React.useMemo(() => {
+		const safeData = Array.isArray(data) ? data : []
+		const safeUnlockData = Array.isArray(unlockData) ? unlockData : []
+
+		if (safeData.length === 0) {
+			return {
+				tvl: 0,
+				percentChange: 0,
+				dayAgoTvl: 0,
+				ready: false
+			}
 		}
-		const lastLock = data.slice(-1)[0]
-		const lastUnlock = unlockData
-			.filter((e) => parseInt(e.height) <= parseInt(lastLock.height))
-			.slice(-1)[0]
+
+		if (safeUnlockData.length === 0) {
+			return {
+				tvl: 0,
+				percentChange: 0,
+				dayAgoTvl: 0,
+				ready: false
+			}
+		}
+
+		const lastLock = safeData.slice(-1)[0]
+		const filteredUnlocks = safeUnlockData.filter(
+			(e) => parseInt(e.height, 10) <= parseInt(lastLock.height, 10)
+		)
+		const lastUnlock = filteredUnlocks.slice(-1)[0]
 
 		const lastLockHeight = parseInt(lastLock.height, 10)
 
-		const dayAgoLock = data.filter((e) => parseInt(e.height) < lastLockHeight - 144).slice(-1)[0]
-		const dayAgoUnlock = unlockData
-			.filter((e) => parseInt(e.height) <= parseInt(dayAgoLock.height))
+		if (!lastUnlock) {
+			return {
+				tvl: 0,
+				percentChange: 0,
+				dayAgoTvl: 0,
+				ready: false
+			}
+		}
+
+		const dayAgoLock = safeData
+			.filter((e) => parseInt(e.height, 10) < lastLockHeight - 144)
 			.slice(-1)[0]
+		if (!dayAgoLock) {
+			const tvl = (parseInt(lastLock.sum, 10) - parseInt(lastUnlock.sum, 10)) / 1e8
+			return {
+				tvl,
+				percentChange: 0,
+				dayAgoTvl: tvl,
+				ready: true
+			}
+		}
 
-		const mempoolSats = mempoolData?.sats || 0
-		const tvl = (parseInt(lastLock.sum) - parseInt(lastUnlock.sum)) / 1e8
-		const dayAgoTvl = (parseInt(dayAgoLock.sum) - parseInt(dayAgoUnlock.sum)) / 1e8
+		const dayAgoUnlockCandidates = safeUnlockData.filter(
+			(e) => parseInt(e.height, 10) <= parseInt(dayAgoLock.height, 10)
+		)
+		const dayAgoUnlock = dayAgoUnlockCandidates.slice(-1)[0]
 
-		console.log({
-			lastLock,
-			lastUnlock,
-			dayAgoLock,
-			dayAgoUnlock,
-			diff: tvl - dayAgoTvl,
-			mempool: mempoolSats
-		})
+		if (!dayAgoUnlock) {
+			const tvl = (parseInt(lastLock.sum, 10) - parseInt(lastUnlock.sum, 10)) / 1e8
+			return {
+				tvl,
+				percentChange: 0,
+				dayAgoTvl: tvl,
+				ready: true
+			}
+		}
 
-		const percentChange = ((tvl - dayAgoTvl) / dayAgoTvl) * 100
+		const tvl = (parseInt(lastLock.sum, 10) - parseInt(lastUnlock.sum, 10)) / 1e8
+		const dayAgoTvl = (parseInt(dayAgoLock.sum, 10) - parseInt(dayAgoUnlock.sum, 10)) / 1e8
 
-		return { tvl, percentChange, dayAgoTvl }
+		const percentChange =
+			dayAgoTvl === 0 ? 0 : ((tvl - dayAgoTvl) / dayAgoTvl) * 100
+
+		return { tvl, percentChange, dayAgoTvl, ready: true }
 	}, [data, unlockData, mempoolData])
 
 	const totalCirculatingSupply = 19600000 // 19.6M
@@ -87,13 +133,15 @@ export default function Chart(props: {
 	const ref = useRef()
 
 	useEffect(() => {
-		const groups = groupData(data, selectedTab)
+		const safeData = Array.isArray(data) ? data : []
+		const safeUnlockData = Array.isArray(unlockData) ? unlockData : []
+		const groups = groupData(safeData, selectedTab)
 
 		const parsedData = Object.keys(groups)
 			.map((key) => {
 				const values = groups[key].map((e) => parseInt(e.sum))
 				const maxHeight = Math.max(...groups[key].map((e) => e.height))
-				const lastUnlock = unlockData
+				const lastUnlock = safeUnlockData
 					.filter((e) => e.height <= maxHeight)
 					.reduce((a, e) => a + parseInt(e.sats), 0)
 
@@ -110,7 +158,7 @@ export default function Chart(props: {
 				const heights = groups[key].map((e) => e.height)
 				const maxHeight = Math.max(...heights)
 				const minHeight = Math.min(...heights)
-				const unlocks = unlockData.filter((e) => e.height >= minHeight && e.height <= maxHeight)
+				const unlocks = safeUnlockData.filter((e) => e.height >= minHeight && e.height <= maxHeight)
 
 				const lockVolume = groups[key].map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
 				const unlockVolume = unlocks.map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
@@ -208,7 +256,7 @@ export default function Chart(props: {
 			return (
 				<div
 					className={classNames(
-						'flex justify-center bg-[#17191E] hover:text-white transition duration-200 hover:-translate-y-0.5 hover:bg-gray-800 cursor-pointer text-xs rounded-lg p-2',
+						'flex justify-center bg-white/[0.06] hover:text-white transition duration-200 hover:-translate-y-0.5 hover:bg-white/[0.12] cursor-pointer text-xs rounded-full px-4 py-2 font-medium tracking-wide text-white/60',
 						{
 							['text-white font-semibold']: selectedTab === e,
 							['text-gray-300']: selectedTab !== e
@@ -225,52 +273,65 @@ export default function Chart(props: {
 	)
 
 	return (
-		<div className="h-full w-full relative">
-			<div className="md:absolute l-0 t-0 z-10 flex flex-col px-4 gap-2">
-				<p className="text-sm font-semibold text-white">Locked BSV</p>
-				<div className="bg-[#17191E] rounded-lg p-4 flex justify-between gap-8 md:w-[350px] max-w-full">
-					<div className="flex flex-col">
-						<div className="flex gap-2 items-center">
-							<img src="/bsv.svg" className="h-4 w-4" />
-							<p className="text-2xl text-white whitespace-nowrap">
-								{formatNumber(tvl.toFixed(2))}
+		<div className="relative h-full w-full">
+			<div className="md:absolute md:left-0 md:top-0 md:z-10 flex flex-col gap-3 px-5 py-5">
+				<div className="rounded-3xl border border-white/10 bg-[#0f131b]/90 p-4 shadow-[0_24px_60px_rgba(8,12,20,0.45)]">
+					<p className="text-xs font-semibold uppercase tracking-[0.35em] text-white/60">
+						Locked BSV
+					</p>
+					<div className="mt-4 flex items-end justify-between gap-6">
+						<div>
+							<div className="flex items-center gap-2">
+								<img src="/bsv.svg" className="h-5 w-5" />
+								<p className="text-3xl font-semibold text-white">
+									{formatNumber(tvl.toFixed(2))}
+								</p>
+							</div>
+							<p
+								className={classNames('mt-2 text-sm', {
+									['text-[#6CE9A6]']: percentChange > 0,
+									['text-red-400']: percentChange < 0,
+									['text-white/60']: percentChange === 0
+								})}
+							>
+								{ready ? (
+									<>
+										{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
+										{percentChange.toFixed(2)}%)
+									</>
+								) : (
+									'Updating…'
+								)}
 							</p>
 						</div>
-						<p
-							className={classNames('text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							{formatNumber(((dayAgoTvl * percentChange) / 100).toFixed(2))} (
-							{percentChange.toFixed(2)}%)
-						</p>
-					</div>
-					<div className="flex flex-col">
-						<p className="text-2xl text-white whitespace-nowrap">
-							${formatNumber((tvl * exchangeRate).toFixed(2))}
-						</p>
-						<p
-							className={classNames('text-right text-sm whitespace-nowrap', {
-								['text-[#6CE9A6]']: percentChange > 0,
-								['text-red-500']: percentChange < 0
-							})}
-						>
-							${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}
-						</p>
+						<div className="text-right">
+							<p className="text-3xl font-semibold text-white">
+								${formatNumber((tvl * exchangeRate).toFixed(2))}
+							</p>
+							<p
+								className={classNames('mt-2 text-sm', {
+									['text-[#6CE9A6]']: percentChange > 0,
+									['text-red-400']: percentChange < 0,
+									['text-white/60']: percentChange === 0
+								})}
+							>
+								{ready
+									? `$${formatNumber((((dayAgoTvl * percentChange) / 100) * exchangeRate).toFixed(2))}`
+									: '—'}
+							</p>
+						</div>
 					</div>
 				</div>
-				<div className="flex flex-col bg-[#17191E] rounded-lg p-2">
-					<p className="text-sm flex justify-between items-center bg-[#17191E] rounded-lg p-2">
-						<span className="text-gray-300">Percent of circulating supply locked</span>
-						<span>
-							<span className="text-white">
-								{((tvl / totalCirculatingSupply) * 100).toFixed(2)}%
-							</span>
-						</span>
+				<div className="rounded-3xl border border-white/10 bg-[#0f131b]/90 p-4 shadow-[0_24px_60px_rgba(8,12,20,0.35)]">
+					<p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/55">
+						Share of circulating supply
 					</p>
+					<p className="mt-3 text-2xl font-semibold text-white">
+						{ready ? ((tvl / totalCirculatingSupply) * 100).toFixed(2) : '—'}%
+					</p>
+					<p className="mt-1 text-sm text-white/60">Measured against 19.6M BSV total supply.</p>
 				</div>
-				<div className="gap-2 grid grid-cols-5">{TABS.map(renderTab)}</div>
+				<div className="grid grid-cols-5 gap-2">{TABS.map(renderTab)}</div>
 			</div>
 			<div className="h-full w-full" ref={ref} />
 		</div>

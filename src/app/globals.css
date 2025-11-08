@@ -2,10 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-body {}
+:root {
+	--yours-background: #050507;
+	--yours-surface: rgba(16, 20, 28, 0.88);
+	--yours-border: rgba(255, 255, 255, 0.08);
+	--yours-card: rgba(17, 23, 32, 0.72);
+	--yours-glow: rgba(40, 121, 255, 0.16);
+}
+
+body {
+	min-height: 100vh;
+	background: radial-gradient(120% 120% at 50% 0%, rgba(76, 201, 240, 0.14) 0%, transparent 55%),
+		radial-gradient(110% 110% at 90% 12%, rgba(108, 233, 166, 0.24) 0%, transparent 60%),
+		linear-gradient(180deg, #050507 0%, #03020d 100%);
+	color: #f5f7ff;
+	font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+@keyframes mobile-menu-enter {
+	from {
+		transform: translateX(100%);
+		opacity: 0;
+	}
+	to {
+		transform: translateX(0);
+		opacity: 1;
+	}
 }
