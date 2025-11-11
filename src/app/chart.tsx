@@ -256,7 +256,11 @@ export default function Chart(props: {
 			return (
 				<div
 					className={classNames(
+<<<<<<< HEAD
 						'flex justify-center bg-white/[0.06] hover:text-white transition duration-200 hover:-translate-y-0.5 hover:bg-white/[0.12] cursor-pointer text-xs rounded-full px-4 py-2 font-medium tracking-wide text-white/60',
+=======
+						'flex justify-center bg-[#17191E] hover:text-white transition cursor-pointer text-xs rounded-lg p-2',
+>>>>>>> 08c121f (Style changes, hover state)
 						{
 							['text-white font-semibold']: selectedTab === e,
 							['text-gray-300']: selectedTab !== e

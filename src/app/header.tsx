@@ -6,6 +6,8 @@ import Image from 'next/image'
 import { Chrome, Menu, Twitter, X } from 'lucide-react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { GitbookIcon } from '@/components/icons/gitbook-icon'
+import useChainInfo from '@/utils/hooks/useChainInfo'
+import { usePathname } from 'next/navigation'
 
 const navLinks = [
 	{ href: '#overview', label: 'Overview' },
@@ -15,6 +17,8 @@ const navLinks = [
 ]
 
 export default function Header() {
+	useChainInfo()
+	const pathname = usePathname()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
@@ -71,6 +75,10 @@ export default function Header() {
 		}
 
 		setIsMenuOpen(false)
+	}
+
+	if (pathname?.startsWith('/social')) {
+		return null
 	}
 
 	return (
