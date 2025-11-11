@@ -23,7 +23,7 @@ export async function fetchLinkMetadata(url: string): Promise<LinkMetadata | nul
 		url,
 		title: 'Link preview title',
 		description: 'Link preview description placeholder content.',
-		image: `https://api.dicebear.com/7.x/shapes/svg?seed=${encodeURIComponent(url)}`,
+		image: '/unfurl.png',
 		favicon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(url)}`
 	}
 }

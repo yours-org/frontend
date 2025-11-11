@@ -58,7 +58,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 			address: '1yoursdemoaddress00001',
 			name: 'Yours Explorer',
 			username: 'yoursdemo',
-			avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=yoursdemo'
+			avatar: '/pfp/1.png'
 		})
 	}
 

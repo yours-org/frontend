@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo } from 'react'
+import Image from 'next/image'
+import { useEffect, useMemo, useState } from 'react'
 import { cn } from '@/lib/utils'
 
 interface AvatarProps {
@@ -23,6 +24,12 @@ const palette = [
 
 export function Avatar({ src, alt = 'User avatar', size = 40, className }: AvatarProps) {
 	const dimension = `${size}px`
+	const [hasError, setHasError] = useState(false)
+	const shouldShowImage = Boolean(src && !hasError)
+
+	useEffect(() => {
+		setHasError(false)
+	}, [src])
 
 	const initials = useMemo(() => {
 		const label = (alt || '').trim()
@@ -45,17 +52,28 @@ export function Avatar({ src, alt = 'User avatar', size = 40, className }: Avata
 	return (
 		<div
 			className={cn(
-				'flex items-center justify-center rounded-full text-sm font-semibold text-white shadow-inner',
+				'flex items-center justify-center overflow-hidden rounded-full bg-neutral-800 text-sm font-semibold text-white shadow-inner',
 				className
 			)}
 			style={{
 				width: dimension,
 				height: dimension,
-				background
+				background: shouldShowImage ? undefined : background
 			}}
 			aria-label={alt}
 		>
-			{initials}
+			{shouldShowImage ? (
+				<Image
+					src={src}
+					alt={alt}
+					width={size}
+					height={size}
+					className="h-full w-full object-cover"
+					onError={() => setHasError(true)}
+				/>
+			) : (
+				initials
+			)}
 		</div>
 	)
 }

@@ -206,7 +206,11 @@ export const SidebarLink = ({ link, className, ...rest }: SidebarLinkProps) => {
 		<Link
 			href={link.href}
 			onClick={handleClick}
-			className={cn('flex items-center gap-3 py-2 text-sm text-neutral-700 dark:text-neutral-200', className)}
+			className={cn(
+				'flex items-center gap-3 py-2 text-sm text-neutral-700 dark:text-neutral-200',
+				!open && 'justify-center gap-0',
+				className
+			)}
 			{...rest}
 		>
 			<span className="flex h-9 w-9 items-center justify-center text-neutral-700 dark:text-neutral-200">
