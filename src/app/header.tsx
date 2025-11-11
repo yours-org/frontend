@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import useChainInfo from '@/utils/hooks/useChainInfo'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Chrome, Menu, Twitter, X } from 'lucide-react'
@@ -16,7 +15,6 @@ const navLinks = [
 ]
 
 export default function Header() {
-	useChainInfo()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false)
 
