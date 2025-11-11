@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import type { Variants } from 'framer-motion'
 import { Image as ImageIcon, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
@@ -14,7 +15,7 @@ interface PostComposerProps {
 	className?: string
 }
 
-const expandAnimation = {
+const expandAnimation: Variants = {
 	initial: { height: 40, opacity: 0 },
 	animate: {
 		height: 'auto',

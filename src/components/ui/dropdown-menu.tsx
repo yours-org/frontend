@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils'
 interface DropdownContextValue {
 	open: boolean
 	setOpen: (value: boolean) => void
-	menuRef: React.RefObject<HTMLDivElement>
+	menuRef: React.MutableRefObject<HTMLDivElement | null>
 }
 
 const DropdownMenuContext = createContext<DropdownContextValue | undefined>(undefined)
@@ -36,7 +36,7 @@ interface DropdownMenuProps {
 
 export function DropdownMenu({ children }: DropdownMenuProps) {
 	const [open, setOpen] = useState(false)
-	const menuRef = useRef<HTMLDivElement>(null)
+	const menuRef = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
 		if (!open) return
@@ -81,9 +81,10 @@ export const DropdownMenuTrigger = ({ children, asChild }: DropdownMenuTriggerPr
 	const handleToggle = () => setOpen(!open)
 
 	if (asChild && isValidElement(children)) {
-		return cloneElement(children, {
+		const child = children as React.ReactElement<{ onClick?: React.MouseEventHandler<HTMLElement> }>
+		return cloneElement(child, {
 			onClick: (event: React.MouseEvent<HTMLElement>) => {
-				children.props.onClick?.(event)
+				child.props.onClick?.(event)
 				if (!event.defaultPrevented) {
 					handleToggle()
 				}
