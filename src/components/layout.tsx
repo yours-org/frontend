@@ -264,6 +264,6 @@ const Logo = () => (
 
 const LogoIcon = () => (
 	<Link href="/" className="flex items-center text-neutral-900 dark:text-neutral-100">
-	<Image src="/icon.svg" alt="Yours Logo" width={28} height={26} className="h-7 w-7 invert dark:invert-0" />
+		<Image src="/icon.svg" alt="Yours Logo" width={28} height={26} className="h-7 w-7 invert dark:invert-0" />
 	</Link>
 )

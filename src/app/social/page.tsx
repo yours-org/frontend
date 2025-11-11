@@ -33,37 +33,58 @@ const placeholderAuthors: Author[] = [
 	{
 		id: '0',
 		address: '1placeholder0001',
-		name: 'Satoshi Visionary',
-		username: 'visionary',
-		avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=satoshi'
+		name: 'Captain Caca',
+		username: 'captaincaca',
+		avatar: '/pfp/1.png'
 	},
 	{
 		id: '1',
 		address: '1placeholder0002',
-		name: 'Chain Architect',
-		username: 'architect',
-		avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=architect'
+		name: 'Gilda Gasblast',
+		username: 'gildagasblast',
+		avatar: '/pfp/4.jpg'
 	},
 	{
 		id: '2',
 		address: '1placeholder0003',
-		name: 'Metrics Maven',
-		username: 'metrics',
-		avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=metrics'
+		name: 'Duke Doodie',
+		username: 'doodieduke',
+		avatar: '/pfp/5.png'
+	},
+	{
+		id: '3',
+		address: '1placeholder0004',
+		name: 'Lady Logjam',
+		username: 'ladylogjam',
+		avatar: '/pfp/2.jpg'
+	},
+	{
+		id: '4',
+		address: '1placeholder0005',
+		name: 'Baron von Blowout',
+		username: 'baronblowout',
+		avatar: '/pfp/3.jpg'
+	},
+	{
+		id: '5',
+		address: '1placeholder0006',
+		name: 'Professor Pootson',
+		username: 'professorpootson',
+		avatar: '/pfp/wayne.jpg'
 	}
 ]
 
 const placeholderPosts: Post[] = [
 	{
 		id: 'p-1',
-		text: 'Just shipped a social experience inside Yours—built fully on placeholder data but the interactions feel real. 🚀',
+		text: "Captain's log: shipped a smart bidet that salutes every time it flushes. Crew morale is high, methane levels even higher. 💩🚽",
 		createdAt: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
 		author: placeholderAuthors[0],
 		linkPreview: {
 			url: 'https://yours.org',
-			title: 'Yours Platform',
-			description: 'Infrastructure designed for social apps on Bitcoin SV.',
-			image: 'https://api.dicebear.com/7.x/shapes/svg?seed=yours-platform',
+			title: 'Flush Fleet Roadmap',
+			description: 'Keeping every deployment shipshape, shipshank, and freshly shanked.',
+			image: '/pfp/levelspost.jpg',
 			favicon: 'https://www.google.com/s2/favicons?domain=yours.org'
 		},
 		engagement: {
@@ -74,7 +95,7 @@ const placeholderPosts: Post[] = [
 	},
 	{
 		id: 'p-2',
-		text: 'Designing adaptive sidebars that feel at home across desktop and mobile. Hover to expand, tap to explore.',
+		text: "QA sprint wrapped! New feature auto-detects silent-but-deadlies and plays a victory trombone. User delight measured in decibels… and tears.",
 		createdAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
 		author: placeholderAuthors[1],
 		engagement: {
@@ -85,13 +106,53 @@ const placeholderPosts: Post[] = [
 	},
 	{
 		id: 'p-3',
-		text: 'Rolling out analytics for social engagement soon. Imagine on-chain dashboards with realtime updates.',
+		text: 'Gas fee update: we now offset every toot-saction with a planted whoopee cushion. Sustainable silliness is the only path forward.',
 		createdAt: new Date(Date.now() - 1000 * 60 * 90).toISOString(),
 		author: placeholderAuthors[2],
 		engagement: {
 			likes: 54,
 			comments: 11,
 			shares: 20
+		}
+	},
+	{
+		id: 'p-4',
+		text: 'Lady Logjam here—implemented a flush-to-earn model. Users stack sats every time they drop a performance review in porcelain.',
+		createdAt: new Date(Date.now() - 1000 * 60 * 150).toISOString(),
+		author: placeholderAuthors[3],
+		linkPreview: {
+			url: 'https://yours.org/reports',
+			title: 'Flushonomics Whitepaper',
+			description: 'A 30-page thesis on liquidity events, both figurative and… aromatic.',
+			image: '/pfp/chart.jpg',
+			favicon: 'https://www.google.com/s2/favicons?domain=yours.org'
+		},
+		engagement: {
+			likes: 21,
+			comments: 5,
+			shares: 7
+		}
+	},
+	{
+		id: 'p-5',
+		text: 'Baron von Blowout just forked the whoopee chain. New consensus: proof-of-guffaw keeps the gas flowing and the devs glowing.',
+		createdAt: new Date(Date.now() - 1000 * 60 * 210).toISOString(),
+		author: placeholderAuthors[4],
+		engagement: {
+			likes: 47,
+			comments: 8,
+			shares: 16
+		}
+	},
+	{
+		id: 'p-6',
+		text: 'Professor Pootson shipped an AI that predicts office crop-dusts and sends pre-emptive candle deploys. Accuracy: 96%, APR: aromatic.',
+		createdAt: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
+		author: placeholderAuthors[5],
+		engagement: {
+			likes: 39,
+			comments: 4,
+			shares: 12
 		}
 	}
 ]

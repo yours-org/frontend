@@ -115,7 +115,7 @@ export function PostComposer({ avatar, onSubmit, className }: PostComposerProps)
 				className
 			)}
 		>
-			<div className="flex items-start gap-3">
+			<div className={cn('flex gap-3', isExpanded ? 'items-start' : 'items-center')}>
 				<Avatar src={avatar ?? undefined} size={40} className="ring-2 ring-neutral-200 dark:ring-neutral-800" />
 				<div className="flex-1">
 					<AnimatePresence mode="wait">
@@ -126,7 +126,10 @@ export function PostComposer({ avatar, onSubmit, className }: PostComposerProps)
 								value={text}
 								onChange={(event) => setText(event.target.value)}
 								onFocus={() => setIsFocused(true)}
-								className="min-h-[60px] w-full resize-none border-none bg-transparent text-sm text-neutral-800 outline-none placeholder:text-neutral-500 dark:text-neutral-200 dark:placeholder:text-neutral-500"
+								className={cn(
+									'w-full resize-none border-none bg-transparent text-sm text-neutral-800 outline-none transition-all placeholder:text-neutral-500 dark:text-neutral-200 dark:placeholder:text-neutral-500',
+									isExpanded ? 'min-h-[120px] py-1' : 'h-10 py-2'
+								)}
 							/>
 							<AnimatePresence>
 								{linkPreview && (
