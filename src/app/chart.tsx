@@ -1,28 +1,36 @@
 'use client'
 
-import { createChart, ColorType } from 'lightweight-charts'
+import { createChart, ColorType, UTCTimestamp } from 'lightweight-charts'
 // @ts-ignore
 import React, { useEffect, useRef } from 'react'
 import formatNumber from '@/utils/format-number'
 import useExchangeRate from '@/utils/hooks/useExchangeRate'
 import classNames from 'classnames'
+import type { LockHistoryEntry, UnlockHistoryEntry } from '@/types/lock-history'
 
-const TABS = ['1h', '4h', '6h', '12h', '1D']
+const INTERVAL_MILLISECONDS = {
+	'10m': 10 * 60 * 1000,
+	'1h': 60 * 60 * 1000,
+	'4h': 60 * 60 * 1000 * 4,
+	'6h': 60 * 60 * 1000 * 6,
+	'12h': 60 * 60 * 1000 * 12,
+	'1D': 24 * 60 * 60 * 1000
+} as const
 
-function groupData(data, interval) {
+type IntervalKey = keyof typeof INTERVAL_MILLISECONDS
+
+const TABS: IntervalKey[] = ['1h', '4h', '6h', '12h', '1D']
+
+const toHeightNumber = (value: number | string) =>
+	typeof value === 'number' ? value : parseInt(value, 10)
+
+function groupData(data: LockHistoryEntry[], interval: IntervalKey) {
 	if (!Array.isArray(data) || data.length === 0) {
 		return {}
 	}
 
-	const groupedData = {}
-	const intervalMilliseconds = {
-		'10m': 10 * 60 * 1000,
-		'1h': 60 * 60 * 1000,
-		'4h': 60 * 60 * 1000 * 4,
-		'6h': 60 * 60 * 1000 * 6,
-		'12h': 60 * 60 * 1000 * 12,
-		'1D': 24 * 60 * 60 * 1000
-	}
+	const groupedData: Record<string, LockHistoryEntry[]> = {}
+	const intervalMilliseconds = INTERVAL_MILLISECONDS
 
 	data.forEach((item) => {
 		const date = new Date(item.time * 1000)
@@ -44,13 +52,13 @@ function groupData(data, interval) {
 
 export default function Chart(props: {
 	height: number
-	data: any[]
-	unlockData: any[]
-	mempoolData: any
+	data: LockHistoryEntry[] | null | undefined
+	unlockData: UnlockHistoryEntry[] | null | undefined
+	mempoolData: Record<string, unknown> | null | undefined
 }) {
 	const { data, unlockData, mempoolData, height } = props
 	const { exchangeRate } = useExchangeRate()
-	const [selectedTab, setSelectedTab] = React.useState('1D')
+	const [selectedTab, setSelectedTab] = React.useState<IntervalKey>('1D')
 
 	const { dayAgoTvl, tvl, percentChange, ready } = React.useMemo(() => {
 		const safeData = Array.isArray(data) ? data : []
@@ -76,11 +84,11 @@ export default function Chart(props: {
 
 		const lastLock = safeData.slice(-1)[0]
 		const filteredUnlocks = safeUnlockData.filter(
-			(e) => parseInt(e.height, 10) <= parseInt(lastLock.height, 10)
+			(e) => toHeightNumber(e.height) <= toHeightNumber(lastLock.height)
 		)
 		const lastUnlock = filteredUnlocks.slice(-1)[0]
 
-		const lastLockHeight = parseInt(lastLock.height, 10)
+		const lastLockHeight = toHeightNumber(lastLock.height)
 
 		if (!lastUnlock) {
 			return {
@@ -91,9 +99,7 @@ export default function Chart(props: {
 			}
 		}
 
-		const dayAgoLock = safeData
-			.filter((e) => parseInt(e.height, 10) < lastLockHeight - 144)
-			.slice(-1)[0]
+		const dayAgoLock = safeData.filter((e) => toHeightNumber(e.height) < lastLockHeight - 144).slice(-1)[0]
 		if (!dayAgoLock) {
 			const tvl = (parseInt(lastLock.sum, 10) - parseInt(lastUnlock.sum, 10)) / 1e8
 			return {
@@ -105,7 +111,7 @@ export default function Chart(props: {
 		}
 
 		const dayAgoUnlockCandidates = safeUnlockData.filter(
-			(e) => parseInt(e.height, 10) <= parseInt(dayAgoLock.height, 10)
+			(e) => toHeightNumber(e.height) <= toHeightNumber(dayAgoLock.height)
 		)
 		const dayAgoUnlock = dayAgoUnlockCandidates.slice(-1)[0]
 
@@ -130,9 +136,13 @@ export default function Chart(props: {
 
 	const totalCirculatingSupply = 19600000 // 19.6M
 
-	const ref = useRef()
+	const ref = useRef<HTMLDivElement | null>(null)
 
 	useEffect(() => {
+		if (!ref.current) {
+			return
+		}
+
 		const safeData = Array.isArray(data) ? data : []
 		const safeUnlockData = Array.isArray(unlockData) ? unlockData : []
 		const groups = groupData(safeData, selectedTab)
@@ -140,14 +150,14 @@ export default function Chart(props: {
 		const parsedData = Object.keys(groups)
 			.map((key) => {
 				const values = groups[key].map((e) => parseInt(e.sum))
-				const maxHeight = Math.max(...groups[key].map((e) => e.height))
+				const maxHeight = Math.max(...groups[key].map((e) => toHeightNumber(e.height)))
 				const lastUnlock = safeUnlockData
-					.filter((e) => e.height <= maxHeight)
+					.filter((e) => toHeightNumber(e.height) <= maxHeight)
 					.reduce((a, e) => a + parseInt(e.sats), 0)
 
 				return {
-					time: groups[key][0].time,
-					value: (Math.max(...values) - parseInt(lastUnlock)) / 1e8
+					time: groups[key][0].time as UTCTimestamp,
+					value: (Math.max(...values) - lastUnlock) / 1e8
 				}
 			})
 			.sort((a, b) => a?.time - b?.time)
@@ -155,16 +165,19 @@ export default function Chart(props: {
 		const volumeData = Object.keys(groups)
 			.map((key) => {
 				const values = groups[key].map((e) => parseInt(e.sum))
-				const heights = groups[key].map((e) => e.height)
+				const heights = groups[key].map((e) => toHeightNumber(e.height))
 				const maxHeight = Math.max(...heights)
 				const minHeight = Math.min(...heights)
-				const unlocks = safeUnlockData.filter((e) => e.height >= minHeight && e.height <= maxHeight)
+				const unlocks = safeUnlockData.filter((e) => {
+					const height = toHeightNumber(e.height)
+					return height >= minHeight && height <= maxHeight
+				})
 
 				const lockVolume = groups[key].map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
 				const unlockVolume = unlocks.map((e) => parseInt(e.sats)).reduce((a, e) => a + e, 0)
 
 				return {
-					time: groups[key][0].time,
+					time: groups[key][0].time as UTCTimestamp,
 					value: (lockVolume + unlockVolume) / 1e8,
 					color: lockVolume > unlockVolume ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)'
 				}
@@ -178,11 +191,6 @@ export default function Chart(props: {
 			areaTopColor: '#2962FF',
 			areaBottomColor: 'rgba(41, 98, 255, 0.28)'
 		}
-		const handleResize = () => {
-			// @ts-ignore
-			chart.applyOptions({ width: ref.current.clientWidth })
-		}
-
 		const chart = createChart(ref.current, {
 			layout: {
 				background: { type: ColorType.Solid, color: colors.backgroundColor },
@@ -210,10 +218,12 @@ export default function Chart(props: {
 			//}
 			//},
 
-			// @ts-ignore
 			width: ref.current.clientWidth,
 			height: height
 		})
+		const handleResize = () => {
+			chart.applyOptions({ width: ref.current?.clientWidth || 0 })
+		}
 		chart.timeScale().fitContent()
 
 		// Locks
@@ -252,7 +262,7 @@ export default function Chart(props: {
 	}, [data, height, unlockData, selectedTab])
 
 	const renderTab = React.useCallback(
-		(e) => {
+		(e: IntervalKey) => {
 			return (
 				<div
 					className={classNames(

@@ -17,7 +17,7 @@ export function ConnectWalletButton({ label = 'Connect Wallet', className, onCli
 			onClick={(event) => {
 				onClick?.(event)
 				if (!event.defaultPrevented) {
-					connect()
+					void connect()
 				}
 			}}
 			className={cn(
@@ -30,5 +30,4 @@ export function ConnectWalletButton({ label = 'Connect Wallet', className, onCli
 		</button>
 	)
 }
-
 

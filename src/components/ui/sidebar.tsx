@@ -183,6 +183,8 @@ interface Links {
 	label: string
 	href: string
 	icon: ReactNode
+	target?: string
+	rel?: string
 	onClick?: (event: MouseEvent) => void
 }
 
@@ -205,6 +207,8 @@ export const SidebarLink = ({ link, className, ...rest }: SidebarLinkProps) => {
 	return (
 		<Link
 			href={link.href}
+			target={link.target}
+			rel={link.rel}
 			onClick={handleClick}
 			className={cn('flex items-center gap-3 py-2 text-sm text-neutral-700 dark:text-neutral-200', className)}
 			{...rest}
@@ -224,5 +228,4 @@ export const SidebarLink = ({ link, className, ...rest }: SidebarLinkProps) => {
 		</Link>
 	)
 }
-
 

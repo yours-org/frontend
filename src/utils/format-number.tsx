@@ -1,22 +1,21 @@
 import NumAbbr from 'number-abbreviate'
+
 const numAbbr = new NumAbbr(['k', 'm', 'b', 't', 'q'])
 
-export default function numberWithCommas(x) {
+export default function numberWithCommas(
+	x: number | string | null | undefined
+): string | undefined {
 	if (!x) {
 		return
 	}
 
-	const int = parseInt(x)
+	const numericValue = typeof x === 'number' ? x : parseFloat(x)
 
-	if (!isNaN(int) && int > 100000000) {
-		return numAbbr.abbreviate(int, 2).toUpperCase()
+	if (!Number.isNaN(numericValue) && numericValue > 100000000) {
+		return numAbbr.abbreviate(numericValue, 2).toUpperCase()
 	}
 
-	const split = x.toString().split('.')
-	const decimals = split[1]
-	const value = split[0]
+	const [value, decimals] = x.toString().split('.')
 
-	return `${value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${
-		decimals ? `.${decimals}` : ''
-	}`
+	return `${value.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}${decimals ? `.${decimals}` : ''}`
 }

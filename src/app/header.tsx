@@ -6,8 +6,9 @@ import Image from 'next/image'
 import { Chrome, Menu, Twitter, X } from 'lucide-react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { GitbookIcon } from '@/components/icons/gitbook-icon'
-import useChainInfo from '@/utils/hooks/useChainInfo'
 import { usePathname } from 'next/navigation'
+import { ConnectWalletButton } from '@/components/ui/connect-button'
+import { useWallet } from '@/components/layout'
 
 const navLinks = [
 	{ href: '#overview', label: 'Overview' },
@@ -17,10 +18,11 @@ const navLinks = [
 ]
 
 export default function Header() {
-	useChainInfo()
 	const pathname = usePathname()
 	const [isScrolled, setIsScrolled] = React.useState(false)
 	const [isMenuOpen, setIsMenuOpen] = React.useState(false)
+	const { isConnected, address, user, disconnect } = useWallet()
+	const [hasWalletProvider, setHasWalletProvider] = React.useState(false)
 
 	React.useEffect(() => {
 		const handleScroll = () => {
@@ -59,6 +61,18 @@ export default function Header() {
 		return () => window.removeEventListener('keydown', handleKeyDown)
 	}, [])
 
+	React.useEffect(() => {
+		if (typeof window === 'undefined') return
+
+		const updateAvailability = () => {
+			setHasWalletProvider(Boolean(window.yours))
+		}
+
+		updateAvailability()
+		window.addEventListener('yours#initialized', updateAvailability)
+		return () => window.removeEventListener('yours#initialized', updateAvailability)
+	}, [])
+
 	const handleNavClick = (event: React.MouseEvent<HTMLAnchorElement>, href: string) => {
 		event.preventDefault()
 
@@ -81,16 +95,100 @@ export default function Header() {
 		return null
 	}
 
+	const formattedAddress = React.useMemo(() => {
+		if (!address) return 'Wallet Connected'
+		return `${address.slice(0, 6)}...${address.slice(-4)}`
+	}, [address])
+
+	const renderDesktopWalletCTA = () => {
+		if (!hasWalletProvider) return null
+
+		if (isConnected) {
+			return (
+				<button
+					type="button"
+					onClick={() => {
+						void disconnect()
+					}}
+					className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:border-emerald-200/50 hover:bg-emerald-400/20"
+				>
+					{user?.avatar ? (
+						<img
+							src={user.avatar}
+							alt="Connected wallet avatar"
+							className="h-4 w-4 rounded-full object-cover"
+						/>
+					) : (
+						<span className="h-2 w-2 rounded-full bg-emerald-300" aria-hidden="true" />
+					)}
+					{formattedAddress}
+				</button>
+			)
+		}
+
+		return (
+			<ConnectWalletButton
+				label="Connect Wallet"
+				className="min-w-[160px] border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/20"
+			/>
+		)
+	}
+
+	const renderMobileWalletCTA = () => {
+		if (!hasWalletProvider) return null
+
+		if (isConnected) {
+			return (
+				<button
+					type="button"
+					onClick={() => {
+						void disconnect()
+						setIsMenuOpen(false)
+					}}
+					className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-emerald-200/40 bg-emerald-500/15 px-4 py-2 text-sm font-semibold text-emerald-100 transition hover:border-emerald-200/60 hover:bg-emerald-500/25"
+				>
+					{user?.avatar ? (
+						<img
+							src={user.avatar}
+							alt="Connected wallet avatar"
+							className="h-4 w-4 rounded-full object-cover"
+						/>
+					) : (
+						<span className="h-2 w-2 rounded-full bg-emerald-300" aria-hidden="true" />
+					)}
+					{formattedAddress}
+				</button>
+			)
+		}
+
+		return (
+			<ConnectWalletButton
+				label="Connect Wallet"
+				onClick={() => setIsMenuOpen(false)}
+				className="w-full justify-center border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/20"
+			/>
+		)
+	}
+
 	return (
 		<>
 			<header
 				className={`sticky top-0 z-50 w-full border-b transition-colors duration-300 ${
-					isScrolled ? 'backdrop-blur bg-[#050507]/80 border-white/10' : 'border-transparent bg-transparent'
+					isScrolled
+						? 'backdrop-blur bg-[#050507]/80 border-white/10'
+						: 'border-transparent bg-transparent'
 				}`}
 			>
 				<div className="mx-auto flex h-[72px] w-full max-w-7xl items-center justify-between gap-6 px-6">
 					<Link href="/" className="flex items-center text-white">
-						<Image src="/logo.svg" alt="Yours Wallet" width={128} height={128} priority className="h-20 w-20" />
+						<Image
+							src="/logo.svg"
+							alt="Yours Wallet"
+							width={128}
+							height={128}
+							priority
+							className="h-20 w-20"
+						/>
 					</Link>
 
 					<nav className="hidden items-center gap-6 text-sm text-white/70 md:flex">
@@ -144,6 +242,7 @@ export default function Header() {
 								<Chrome className="h-4 w-4 transition group-hover:translate-y-0.5" />
 								<span>Download Extension</span>
 							</a>
+							{renderDesktopWalletCTA()}
 						</div>
 						<button
 							type="button"
@@ -190,7 +289,7 @@ export default function Header() {
 								<a
 									href="https://github.com/yours-org"
 									target="_blank"
-									 rel="noreferrer"
+									rel="noreferrer"
 									className="inline-flex items-center text-white/70 transition hover:text-white"
 									aria-label="View Yours Wallet on GitHub"
 								>
@@ -219,6 +318,7 @@ export default function Header() {
 							))}
 						</nav>
 						<div className="flex flex-col gap-3">
+							{renderMobileWalletCTA()}
 							<a
 								href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
 								target="_blank"

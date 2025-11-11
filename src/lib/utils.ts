@@ -37,6 +37,21 @@ export function formatTimeAgo(dateInput: string | number | Date) {
 	return ''
 }
 
-export type ChildrenProp = { children?: ReactNode }
+export function formatUrlForDisplay(url?: string | null) {
+	if (!url) {
+		return null
+	}
 
+	try {
+		const parsed = new URL(url)
+		const trimmedPath = parsed.pathname.replace(/\/$/, '')
+		const path =
+			trimmedPath && trimmedPath !== '/' ? trimmedPath : ''
+		return `${parsed.hostname}${path}`
+	} catch {
+		return url
+	}
+}
+
+export type ChildrenProp = { children?: ReactNode }
 
