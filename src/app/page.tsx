@@ -75,7 +75,7 @@ export default function Home() {
 					</p>
 					<div className="flex flex-wrap gap-3">
 						<a
-							href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
+							href="https://chromewebstore.google.com/detail/yours-wallet/mlbnicldlpdimbjdcncnklfempedeipj"
 							target="_blank"
 							rel="noreferrer"
 							className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold tracking-wide text-white transition hover:border-white/40 hover:bg-white/20"
