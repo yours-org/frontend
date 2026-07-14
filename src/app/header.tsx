@@ -3,9 +3,10 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Chrome, Menu, Twitter, X } from 'lucide-react'
+import { Chrome, Menu, X } from 'lucide-react'
 import { GitHubLogoIcon } from '@radix-ui/react-icons'
 import { GitbookIcon } from '@/components/icons/gitbook-icon'
+import { XIcon } from '@/components/icons/x-icon'
 import { usePathname } from 'next/navigation'
 import { ConnectWalletButton } from '@/components/ui/connect-button'
 import { useWallet } from '@/components/layout'
@@ -207,13 +208,13 @@ export default function Header() {
 					<div className="flex items-center gap-2 md:gap-3.5">
 						<div className="hidden items-center gap-1.5 md:flex">
 							<a
-								href="https://twitter.com/yourswallet"
+								href="https://x.com/yoursxbt"
 								target="_blank"
 								rel="noreferrer"
 								className="inline-flex h-9 w-9 items-center justify-center text-white/80 transition hover:text-white"
-								aria-label="Follow Yours Wallet on Twitter"
+								aria-label="Follow Yours Wallet on X"
 							>
-								<Twitter className="h-4 w-4" />
+								<XIcon className="h-4 w-4" />
 							</a>
 							<a
 								href="https://yours-wallet.gitbook.io/provider-api/"
@@ -234,7 +235,7 @@ export default function Header() {
 								<GitHubLogoIcon className="h-4 w-4" />
 							</a>
 							<a
-								href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
+								href="https://chromewebstore.google.com/detail/yours-wallet/mlbnicldlpdimbjdcncnklfempedeipj"
 								target="_blank"
 								rel="noreferrer"
 								className="group inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/20"
@@ -278,13 +279,13 @@ export default function Header() {
 									<GitbookIcon className="h-5 w-5" />
 								</a>
 								<a
-									href="https://twitter.com/yourswallet"
+									href="https://x.com/yoursxbt"
 									target="_blank"
 									rel="noreferrer"
 									className="inline-flex items-center text-white/70 transition hover:text-white"
-									aria-label="Follow Yours Wallet on Twitter"
+									aria-label="Follow Yours Wallet on X"
 								>
-									<Twitter className="h-5 w-5" />
+									<XIcon className="h-5 w-5" />
 								</a>
 								<a
 									href="https://github.com/yours-org"
@@ -320,7 +321,7 @@ export default function Header() {
 						<div className="flex flex-col gap-3">
 							{renderMobileWalletCTA()}
 							<a
-								href="https://chromewebstore.google.com/detail/yours/org.yours.wallet"
+								href="https://chromewebstore.google.com/detail/yours-wallet/mlbnicldlpdimbjdcncnklfempedeipj"
 								target="_blank"
 								rel="noreferrer"
 								className="group inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/20"

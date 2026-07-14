@@ -3,9 +3,10 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ArrowUpRight, Chrome, Network, Shield, Sparkles, Twitter } from 'lucide-react'
+import { ArrowUpRight, Chrome, Network, Shield, Sparkles } from 'lucide-react'
 import { GitHubLogoIcon, RocketIcon } from '@radix-ui/react-icons'
 import { GitbookIcon } from '@/components/icons/gitbook-icon'
+import { XIcon } from '@/components/icons/x-icon'
 
 const statHighlights = [
 	{
@@ -187,13 +188,13 @@ export default function Home() {
 						motion to get you there faster.
 					</p>
 					<a
-						href="https://twitter.com/yoursxbt"
+						href="https://x.com/yoursxbt"
 						target="_blank"
 						rel="noreferrer"
 						className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/20"
 					>
-						<Twitter className="h-4 w-4" />
-						<span>Follow us on Twitter</span>
+						<XIcon className="h-4 w-4" />
+						<span>Follow us on X</span>
 					</a>
 				</div>
 			</section>
@@ -208,13 +209,13 @@ export default function Home() {
 					</Link>
 					<div className="flex flex-wrap items-center gap-3 md:justify-self-end md:self-center md:justify-end md:gap-4">
 						<a
-							href="https://twitter.com/yourswallet"
+							href="https://x.com/yoursxbt"
 							target="_blank"
 							rel="noreferrer"
 							className="inline-flex items-center justify-center text-white/70 transition hover:text-white"
-							aria-label="Follow Yours Wallet on Twitter"
+							aria-label="Follow Yours Wallet on X"
 						>
-							<Twitter className="h-4 w-4" />
+							<XIcon className="h-4 w-4" />
 						</a>
 						<a
 							href="https://github.com/yours-org"
